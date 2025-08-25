@@ -1,0 +1,28 @@
+[package]
+name = "the_calcularoty"
+version = "0.1.0"
+edition = "2024"
+build = "build.rs"
+
+[profile.release]
+strip = true
+opt-level = 3
+
+
+[dependencies]
+rodio = "0.21.1"
+slint = {version = "*", features = ["std", "backend-default", "compat-1-2", "renderer-winit-skia", "backend-android-activity-06"], default-features = false}
+
+[build-dependencies]
+slint-build = "*"
+
+[lib]
+crate-type = ["cdylib"]
+
+[package.metadata.android]
+package = "com.rectifier.calcularoty"
+resources = "res"
+strip = "strip"
+
+[package.metadata.android.application]
+label = "Calcularoty"
