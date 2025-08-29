@@ -8,8 +8,9 @@ build = "build.rs"
 strip = true
 opt-level = 3
 
-
 [dependencies]
+awedio = "0.5.0"
+ndk = "0.9.0"
 rodio = "0.21.1"
 slint = {version = "*", features = ["std", "backend-default", "compat-1-2", "renderer-winit-skia", "backend-android-activity-06"], default-features = false}
 
@@ -20,9 +21,17 @@ slint-build = "*"
 crate-type = ["cdylib"]
 
 [package.metadata.android]
+build_targets = [ "aarch64-linux-android"]
 package = "com.rectifier.calcularoty"
 resources = "res"
+assets = "assets"
 strip = "strip"
+apk_name = "TheCalcularoty"
 
 [package.metadata.android.application]
 label = "Calcularoty"
+
+[package.metadata.android.sdk]
+min_sdk_version = 26
+target_sdk_version = 36
+max_sdk_version = 36

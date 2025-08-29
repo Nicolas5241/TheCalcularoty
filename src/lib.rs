@@ -4,6 +4,7 @@ mod logic;
 
 #[unsafe(no_mangle)]
 fn android_main(app: slint::android::AndroidApp) -> Result<(), Box<dyn std::error::Error>> {
-    slint::android::init(app);
-    logic::run_app()    
+    slint::android::init(app.clone())?;
+
+    logic::run_app(Some(app.asset_manager()))
 }
