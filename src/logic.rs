@@ -48,8 +48,6 @@ fn play_background_music_android(asset_manager: AssetManager) -> Result<(), Box<
 
 #[cfg(not(target_os = "android"))]
 fn play_background_music() -> Result<(), Box<dyn Error>> {
-    use rodio::OutputStream;
-
     let file = std::fs::File::open("assets/music.mp3")?;
     let source = Decoder::try_from(file)?;
 

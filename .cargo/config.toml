@@ -1,2 +1,9 @@
-#[build]
-#target = "aarch64-linux-android"
+[target.'cfg(target_family = "windows")']
+linker = "lld-link"
+rustflags = [
+	"-Clink-args=/force:multiple",
+	"-Clink-args=/wholearchive:skunicode_icu.lib",
+	"-Lnative=/xwin/crt/lib/x86_64",
+	"-Lnative=/xwin/sdk/lib/um/x86_64",
+	"-Lnative=/xwin/sdk/lib/ucrt/x86_64",
+]
