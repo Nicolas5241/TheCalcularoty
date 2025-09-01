@@ -19,7 +19,7 @@ pub fn run_app(asset_manager: AssetManager) -> Result<(), Box<dyn Error>> {
 fn play_background_music_android(asset_manager: AssetManager) -> Result<(), Box<dyn Error>> {
     let music_bytes = load_asset_bytes("music.mp3", asset_manager);
     let music_cursor = Cursor::new(music_bytes);
-    let source = Decoder::try_from(music_cursor)?;
+    let source = Decoder::new_looped(music_cursor)?;
 
     let stream_handle = OutputStreamBuilder::open_default_stream()?;
     let sink = Sink::connect_new(stream_handle.mixer());
