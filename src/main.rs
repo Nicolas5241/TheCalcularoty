@@ -1,7 +1,7 @@
 #![cfg(not(target_os = "android"))]
 
-mod logic;
+mod not_android;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    logic::run_app()
+    not_android::run_app()
 }
