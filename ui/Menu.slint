@@ -1,0 +1,39 @@
+import { Button } from "std-widgets.slint";
+
+export component MenuPage inherits Image {
+	source: @image-url("../assets/calcularoty.jpg");
+	image-fit: fill;
+
+	callback goto_lc;
+	callback goto_imp;
+
+	
+	VerticalLayout {
+		alignment: space-around;
+		Text {
+			text: "The Calcularoty";
+			horizontal-alignment: center;
+			font-size: 30px;
+			font-weight: 800;
+			color: white;
+			stroke: black;
+			stroke-width: 3px;
+		}
+		HorizontalLayout {
+			alignment: center;
+			Button {
+				text: "LC Calcularoty";
+				width: 250px;
+				clicked => { goto_lc() }
+			}
+		}
+		HorizontalLayout {
+			alignment: center;
+			Button {
+				text: "IMP Calcularoty";
+				width: 250px;
+				clicked => { goto_imp() }
+			}
+		}
+	}
+}

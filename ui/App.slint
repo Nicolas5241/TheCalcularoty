@@ -1,8 +1,27 @@
 import { LcPage } from "LC.slint";
+import { MenuPage } from "Menu.slint";
+import { ImpPage } from "IMP.slint";
 
 export component MainWindow inherits Window {
+	out property<int> page: 0;
+	
+	title: "The Calcularoty";
+
+	MenuPage {
+		height: parent.height;
+		width: parent.width;
+		visible: page == 0;
+		goto_lc => { page = 1 }
+		goto_imp => { page = 2 }
+	}
 	LcPage {
 		height: parent.height;
 		width: parent.width;
-	}	
+		visible: page == 1;
+	}
+	ImpPage {
+		height: parent.height;
+		width: parent.width;
+		visible: page == 2;
+	}
 }
