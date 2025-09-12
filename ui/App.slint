@@ -3,10 +3,14 @@ import { MenuPage } from "Menu.slint";
 import { ImpPage } from "IMP.slint";
 
 export component MainWindow inherits Window {
-	out property<int> page: 0;
-	
-	title: "The Calcularoty";
+	out property <int> page: 0;
 
+	in property <[string]> lc_input1_model;
+	in property <[string]> lc_input2_model;
+	in property <[string]> lc_input3_model;
+
+	title: "The Calcularoty";
+	
 	MenuPage {
 		height: parent.height;
 		width: parent.width;
@@ -14,10 +18,14 @@ export component MainWindow inherits Window {
 		goto_lc => { page = 1 }
 		goto_imp => { page = 2 }
 	}
-	LcPage {
+	lc := LcPage {
 		height: parent.height;
 		width: parent.width;
 		visible: page == 1;
+		go_back => { page = 0 }
+		input1-model: lc_input1_model;
+		input2-model: lc_input2_model;
+		input3-model: lc_input3_model;
 	}
 	ImpPage {
 		height: parent.height;

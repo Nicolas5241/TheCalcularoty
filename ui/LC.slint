@@ -1,4 +1,60 @@
+import { ComboInput } from "components.slint";
+import { Button } from "std-widgets.slint";
+
 export component LcPage inherits Image {
 	source: @image-url("../assets/resonan.jpg");
 	image-fit: fill;
+
+		
+	in property <[string]> input1-model;
+	in property <[string]> input2-model;
+	in property <[string]> input3-model;
+
+	callback go_back();
+
+	VerticalLayout {
+		padding-top: 10px;
+		padding-bottom: 10px;
+		padding-right: 20px;
+		padding-left: 20px;
+		alignment: space-around;
+
+		Text {
+			text: "LC Calcularoty";
+			stroke: black;
+			stroke-width: 3px;
+			font-size: 30px;
+			horizontal-alignment: center;
+		}
+		input1 := ComboInput {
+			combobox-model: input1-model;
+			input-type: decimal;
+		}
+		input2 := ComboInput {
+			combobox-model: input2-model;
+			input-type: decimal;
+		}
+		output := ComboInput {
+			combobox-model: input3-model;
+			read-only: true;
+		}
+		VerticalLayout {
+			spacing: 20px;
+			HorizontalLayout {
+				alignment: center;
+				Button {
+					text: "Calcularot";
+					width: 150px;
+				}
+			}
+			HorizontalLayout {
+				alignment: center;
+				Button {
+					text: "Escape";
+					width: 150px;
+					clicked => { go_back() }
+				}
+			}
+		}
+	}
 }

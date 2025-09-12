@@ -1,0 +1,55 @@
+import { LineEdit, ComboBox } from "std-widgets.slint";
+export component UserInput inherits HorizontalLayout {
+	in property <bool> stroked: false;
+	in property <length> stroke-width: 3px;
+	in property <brush> stroke-color: black;
+	in property <string> label: "label";
+	in property <length> font-size: 20px;
+
+	spacing: 20px;
+
+	public function get_input() -> string {
+	    input.text
+	}
+
+	if stroked: Text {
+		text: label;
+		stroke: stroke-color;
+		stroke-width: stroke-width;
+		font-size: font-size;
+	}
+	if !stroked: Text {
+		text: label;
+		font-size: font-size;
+	}
+	input := LineEdit {}
+}
+
+export component ComboInput inherits HorizontalLayout {
+	in property <[string]> combobox-model: [""];
+	in property <InputType> input-type: text;
+	in property <bool> read-only: false;
+
+	spacing: 20px;
+
+	public function get_combo_index() {
+	    combo.current-index
+	}
+	
+	public function get_combo_value() {
+	    combo.current-value
+	}
+
+	public function get_input() {
+	    input.text
+	}
+
+	combo := ComboBox {
+		model: combobox-model;
+	}
+
+	input := LineEdit {
+		input-type: input-type;
+		read-only: read-only;
+	}
+}
