@@ -9,6 +9,7 @@ strip = true
 opt-level = 3
 
 [dependencies]
+phf = { version = "0.13.1", features = ["macros"] }
 rodio = "0.21.1"
 slint = {version = "*", features = ["std", "backend-default", "compat-1-2", "renderer-winit-skia", "backend-android-activity-06"], default-features = false}
 

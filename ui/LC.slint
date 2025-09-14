@@ -10,7 +10,9 @@ export component LcPage inherits Image {
 	in property <[string]> input2-model;
 	in property <[string]> input3-model;
 
-	callback go_back();
+	callback go_back;
+	callback input1-combo-changed(string);
+	callback input2-combo-changed(string);
 
 	VerticalLayout {
 		padding-top: 10px;
@@ -29,10 +31,12 @@ export component LcPage inherits Image {
 		input1 := ComboInput {
 			combobox-model: input1-model;
 			input-type: decimal;
+			combo_changed(value) => { input1-combo-changed(value) }
 		}
 		input2 := ComboInput {
 			combobox-model: input2-model;
 			input-type: decimal;
+			combo_changed(value) => { input2-combo-changed(value) }
 		}
 		output := ComboInput {
 			combobox-model: input3-model;

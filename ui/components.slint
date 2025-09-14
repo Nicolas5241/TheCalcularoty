@@ -5,7 +5,7 @@ export component UserInput inherits HorizontalLayout {
 	in property <brush> stroke-color: black;
 	in property <string> label: "label";
 	in property <length> font-size: 20px;
-
+	
 	spacing: 20px;
 
 	public function get_input() -> string {
@@ -30,22 +30,20 @@ export component ComboInput inherits HorizontalLayout {
 	in property <InputType> input-type: text;
 	in property <bool> read-only: false;
 
-	spacing: 20px;
-
-	public function get_combo_index() {
-	    combo.current-index
-	}
+	in-out property <string> combo-value <=> combo.current-value;
+	in-out property <int> combo-index <=> combo.current-index;
 	
-	public function get_combo_value() {
-	    combo.current-value
-	}
+	in-out property <string> input-text <=> input.text;
 
-	public function get_input() {
-	    input.text
-	}
+	callback combo_changed(string);
+
+	changed combo-value => { combo_changed(combo-value) }
+
+	spacing: 20px;
 
 	combo := ComboBox {
 		model: combobox-model;
+		current-value: "";
 	}
 
 	input := LineEdit {
