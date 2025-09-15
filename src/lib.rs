@@ -1,6 +1,8 @@
 #![cfg(target_os = "android")]
 
 mod android;
+mod utils;
+mod units;
 
 #[unsafe(no_mangle)]
 fn android_main(app: slint::android::AndroidApp) -> Result<(), Box<dyn std::error::Error>> {
