@@ -10,6 +10,7 @@ export component MainWindow inherits Window {
 	in property <[string]> lc-input3-model;
 
 	callback lc_input1_combo_changed(string);
+	callback lc_input2_combo_changed(string);
 
 	title: "The Calcularoty";
 	
@@ -27,6 +28,7 @@ export component MainWindow inherits Window {
 
 		go_back => { page = 0 }
 		input1-combo-changed(value) => { lc_input1_combo_changed(value) }
+		input2-combo-changed(value) => { lc_input2_combo_changed(value) }
 
 		input1-model: lc-input1-model;
 		input2-model: lc-input2-model;

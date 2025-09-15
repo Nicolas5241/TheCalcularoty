@@ -23,7 +23,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	let hz_h_model = vec_to_model([hertz_units_shared, henry_units_shared.clone()].concat());
 	let f_h_model = vec_to_model([farad_units_shared, henry_units_shared].concat());
 
-	let models_slice = [f_h_model, hz_h_model, hz_f_model];
+	let models_rc = Rc::new([f_h_model, hz_h_model, hz_f_model]);
 
 	ui.set_lc_input1_model(full_model.clone());
 	ui.set_lc_input2_model(full_model.clone());
@@ -31,6 +31,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 
 	ui.on_lc_input1_combo_changed({
 		let ui_handle = ui.as_weak();
+		let models = models_rc.clone();
 		move |new_value: SharedString| {
 			let ui = ui_handle.unwrap();
 			let new_type = get_unit_group(&new_value);
@@ -38,18 +39,40 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 			if *input1_type.borrow() == new_type {
 				return
 			}
-	
+
 			set_new_model(
 				&new_type,
 				|value: ModelRc<SharedString>| {
 					ui.set_lc_input2_model(value);
 				},
-				&models_slice
+				models.as_ref()
 			);
 
 			input1_type.replace(new_type);
 		}
 	});
+
+    ui.on_lc_input2_combo_changed({
+        let ui_handle = ui.as_weak();
+		let models = models_rc.clone();
+        move |new_value: SharedString| {
+            let ui = ui_handle.unwrap();
+			let new_type = get_unit_group(&new_value);
+
+			if *input2_type.borrow() == new_type {
+				return
+			}
+			set_new_model(
+				&new_type,
+				|value: ModelRc<SharedString>| {
+					ui.set_lc_input1_model(value);
+				},
+				models.as_ref()
+			);
+
+			input2_type.replace(new_type);
+        }
+    });
 
 	ui.run()?;
 
