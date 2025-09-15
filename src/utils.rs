@@ -1,8 +1,15 @@
+use std::ops::Mul;
+
 use crate::units::{HERTZ_UNITS, FARAD_UNITS, HENRY_UNITS, UnitType};
 
 use phf::OrderedMap;
 
+use astro_float::{BigFloat, Consts, RoundingMode};
+
 use slint::{ModelRc, SharedString, ToSharedString, VecModel};
+
+const ROUNDING_MODE = RoundingMode::ToEven;
+const PRECISION = 2048;
 
 #[inline]
 pub fn vec_to_model(vec: Vec<SharedString>) -> ModelRc<SharedString> {
@@ -45,16 +52,84 @@ pub fn get_unit_map(unit_type: &UnitType) -> &OrderedMap<&str, u64> {
 }
 
 //INFO: 1/(2pi*sqrt(l*c))
-fn lc_to_f0() {
-
+fn lc_to_f0(l: BigFloat, c: BigFloat, mut consts: Consts) -> BigFloat {
+	mul(
+		mul(
+			BigFloat::from_u64(2, PRECISION),
+			pi(&mut consts)
+		),
+		sqrt(
+			mul(
+				l,
+				c
+			)
+		)
+	).reciprocal(PRECISION, ROUNDING_MODE)
 }
 
 //INFO: 1/(c*(2pi*R)²)
-fn cf0_to_l() {
-
+fn cf0_to_l(c: BigFloat, f0: BigFloat, mut consts_cache: Consts) -> BigFloat {
+	mul(
+		c,
+		pow(
+			mul(
+				mul(
+					BigFloat::from_u64(2, PRECISION),
+					pi(&mut consts_cache)
+				),
+				f0
+			),
+			2
+		)
+	).reciprocal(PRECISION, ROUNDING_MODE)
 }
 
 //INFO: 1/(l*(2pi*R)²)
-fn lf0_to_c() {
+fn lf0_to_c(l: BigFloat, f0: BigFloat, mut consts_cache: Consts) -> BigFloat {
+	mul(l,
+		pow(
+			mul(f0,
+				mul(
+					BigFloat::from_u64(2, PRECISION),
+					pi(&mut consts_cache)
+				)
+			),
+			2
+		)
+	).reciprocal(PRECISION, ROUNDING_MODE)
+}
 
+#[inline]
+fn mul(n1: BigFloat, n2: BigFloat) -> BigFloat {
+	n1.mul_full_prec(&n2)
+}
+
+#[inline]
+fn div(n1: BigFloat, n2: BigFloat) -> BigFloat {
+	n1.div(&n2, PRECISION, ROUNDING_MODE)
+}
+
+#[inline]
+fn add(n1: BigFloat, n2: BigFloat) -> BigFloat {
+	n1.add_full_prec(&n2)
+}
+
+#[inline]
+fn sub(n1: BigFloat, n2: BigFloat) -> BigFloat {
+	n1.sub_full_prec(&n2)
+}
+
+#[inline]
+fn sqrt(n: BigFloat) -> BigFloat {
+	n.sqrt(PRECISION, ROUNDING_MODE)
+}
+
+#[inline]
+fn pow(n: BigFloat, p: usize) -> BigFloat {
+	n.powi(p, PRECISION, ROUNDING_MODE)
+}
+
+#[inline]
+fn pi(consts_cache: &mut Consts) -> BigFloat {
+	consts_cache.pi(PRECISION, ROUNDING_MODE)
 }
