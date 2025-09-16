@@ -32,18 +32,22 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 
 	ui.on_lc_input1_combo_changed({
 		let ui_handle = ui.as_weak();
+		let type1 = input1_type.clone();
+		let type2 = input2_type.clone();
 		//let models = models_rc.clone();
 		move |new_value: SharedString| {
 			let ui = ui_handle.unwrap();
-			handle_combobox_changed(new_value, input1_type.clone(), |value| ui.set_lc_input1_combo_text(value));
+			handle_combobox_changed(new_value, type1.clone(), type2.clone(), |value| ui.set_lc_input1_combo_text(value));
 		}
 	});
 
     ui.on_lc_input2_combo_changed({
         let ui_handle = ui.as_weak();
+		//let type1 = input2_type.clone();
+		//let type2 = input1_type.clone();
         move |new_value: SharedString| {
             let ui = ui_handle.unwrap();
-			handle_combobox_changed(new_value, input2_type.clone(), |value| ui.set_lc_input2_combo_text(value));
+			handle_combobox_changed(new_value, input2_type.clone(), input1_type.clone(), |value| ui.set_lc_input2_combo_text(value));
         }
     });
 
@@ -86,14 +90,16 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	Ok(())
 }
 
-fn handle_combobox_changed(new_value: SharedString, unit_type: Rc<RefCell<UnitType>>, combo_func: impl Fn(SharedString)) {
+fn handle_combobox_changed(new_value: SharedString, unit_type: Rc<RefCell<UnitType>>, other_type: Rc<RefCell<UnitType>>, combo_func: impl Fn(SharedString)) {
 	let new_type = get_unit_group(&new_value);
 
 	if *unit_type.borrow() == new_type {
 		return
 	}
-	
-	combo_func("".to_shared_string());
+
+	if new_type == *other_type.borrow() {
+		combo_func("".to_shared_string());
+	}
 
 	unit_type.replace(new_type);
 }
