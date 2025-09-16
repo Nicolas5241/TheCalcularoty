@@ -31,10 +31,10 @@ resources = "res"
 assets = "assets"
 strip = "strip"
 apk_name = "TheCalcularoty"
-icon = "@mipmap/ic_launcher"
 
 [package.metadata.android.application]
 label = "Calcularoty"
+icon = "@mipmap/ic_launcher"
 
 [package.metadata.android.sdk]
 min_sdk_version = 26

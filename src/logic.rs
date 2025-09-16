@@ -35,7 +35,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 		//let models = models_rc.clone();
 		move |new_value: SharedString| {
 			let ui = ui_handle.unwrap();
-			handle_combobox_changed(new_value, input1_type.clone(), |value| ui.set_lc_input2_combo_text(value));
+			handle_combobox_changed(new_value, input1_type.clone(), |value| ui.set_lc_input1_combo_text(value));
 		}
 	});
 
@@ -43,7 +43,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
         let ui_handle = ui.as_weak();
         move |new_value: SharedString| {
             let ui = ui_handle.unwrap();
-			handle_combobox_changed(new_value, input2_type.clone(), |value| ui.set_lc_input1_combo_text(value));
+			handle_combobox_changed(new_value, input2_type.clone(), |value| ui.set_lc_input2_combo_text(value));
         }
     });
 
