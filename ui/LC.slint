@@ -10,6 +10,9 @@ export component LcPage inherits Image {
 	in property <[string]> input2-model;
 	in property <[string]> input3-model;
 
+	in-out property <string> input1-combo-text <=> input1.combo-value;
+	in-out property <string> input2-combo-text <=> input2.combo-value;
+
 	in property <string> output_text;
 
 	callback go_back;

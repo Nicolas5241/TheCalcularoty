@@ -16,11 +16,47 @@ pub fn vec_to_model(vec: Vec<SharedString>) -> ModelRc<SharedString> {
 	ModelRc::new(VecModel::from(vec))
 }
 
-pub fn convert_measure(unit: BigFloat, unit_type: UnitType, unit_label: SharedString, target_unit: SharedString) -> BigFloat {
+pub fn calculate_lc(base_input1: BigFloat, base_input2: BigFloat, base1_type: UnitType, output_type: UnitType, consts: &mut Consts) -> BigFloat {
+	match output_type {
+		UnitType::Hertz => {
+			if base1_type == UnitType::Henry {
+				return lc_to_f0(base_input1, base_input2, consts);
+			}
+			lc_to_f0(base_input2, base_input1, consts)
+		}
+
+		UnitType::Farad => {
+			if base1_type == UnitType::Henry {
+				return lf0_to_c(base_input1, base_input2, consts);
+			}
+			lf0_to_c(base_input2, base_input1, consts)
+		}
+
+		UnitType::Henry => {
+			if base1_type == UnitType::Farad {
+				return cf0_to_l(base_input1, base_input2, consts);
+			}
+			cf0_to_l(base_input1, base_input2, consts)
+		}
+
+		UnitType::NotSelected => unimplemented!()
+	}
+}
+
+pub fn convert_measure(unit: BigFloat, unit_type: &UnitType, unit_label: SharedString, target_unit: SharedString) -> BigFloat {
 	match unit_type {
 		UnitType::Hertz => hertz_convert(unit, unit_label, target_unit),
 		UnitType::Farad => farad_convert(unit, unit_label, target_unit),
 		UnitType::Henry => henry_convert(unit, unit_label, target_unit),
+		UnitType::NotSelected => unimplemented!(),
+	}
+}
+
+pub fn convert_to_base(unit: BigFloat, unit_type: &UnitType, unit_label: SharedString) -> BigFloat {
+	match unit_type {
+		UnitType::Hertz => hertz_convert(unit, unit_label, "Hz".to_shared_string()),
+		UnitType::Farad => farad_convert(unit, unit_label, "F".to_shared_string()),
+		UnitType::Henry => henry_convert(unit, unit_label, "H".to_shared_string()),
 		UnitType::NotSelected => unimplemented!(),
 	}
 }
@@ -98,11 +134,11 @@ pub fn shared_to_bigfloat(str: SharedString) -> BigFloat {
 }
 
 //INFO: 1/(2pi*sqrt(l*c))
-fn lc_to_f0(l: BigFloat, c: BigFloat, mut consts: Consts) -> BigFloat {
+fn lc_to_f0(l: BigFloat, c: BigFloat, consts: &mut Consts) -> BigFloat {
 	mul(
 		mul(
 			BigFloat::from_u64(2, PRECISION),
-			pi(&mut consts)
+			pi(consts)
 		),
 		sqrt(
 			mul(
@@ -114,14 +150,14 @@ fn lc_to_f0(l: BigFloat, c: BigFloat, mut consts: Consts) -> BigFloat {
 }
 
 //INFO: 1/(c*(2pi*R)²)
-fn cf0_to_l(c: BigFloat, f0: BigFloat, mut consts_cache: Consts) -> BigFloat {
+fn cf0_to_l(c: BigFloat, f0: BigFloat, consts_cache: &mut Consts) -> BigFloat {
 	mul(
 		c,
 		pow(
 			mul(
 				mul(
 					BigFloat::from_u64(2, PRECISION),
-					pi(&mut consts_cache)
+					pi(consts_cache)
 				),
 				f0
 			),
@@ -131,13 +167,13 @@ fn cf0_to_l(c: BigFloat, f0: BigFloat, mut consts_cache: Consts) -> BigFloat {
 }
 
 //INFO: 1/(l*(2pi*R)²)
-fn lf0_to_c(l: BigFloat, f0: BigFloat, mut consts_cache: Consts) -> BigFloat {
+fn lf0_to_c(l: BigFloat, f0: BigFloat, mut consts_cache: &mut Consts) -> BigFloat {
 	mul(l,
 		pow(
 			mul(f0,
 				mul(
 					BigFloat::from_u64(2, PRECISION),
-					pi(&mut consts_cache)
+					pi(consts_cache)
 				)
 			),
 			2
@@ -158,16 +194,6 @@ fn mul(n1: BigFloat, n2: BigFloat) -> BigFloat {
 #[inline]
 fn div(n1: BigFloat, n2: BigFloat) -> BigFloat {
 	n1.div(&n2, PRECISION, ROUNDING_MODE)
-}
-
-#[inline]
-fn add(n1: BigFloat, n2: BigFloat) -> BigFloat {
-	n1.add_full_prec(&n2)
-}
-
-#[inline]
-fn sub(n1: BigFloat, n2: BigFloat) -> BigFloat {
-	n1.sub_full_prec(&n2)
 }
 
 #[inline]

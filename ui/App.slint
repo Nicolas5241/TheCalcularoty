@@ -11,6 +11,9 @@ export component MainWindow inherits Window {
 
 	in property <string> lc_result_text;
 
+	in-out property <string> lc-input1-combo-text;
+	in-out property <string> lc-input2-combo-text;
+
 	callback lc_input1_combo_changed(string);
 	callback lc_input2_combo_changed(string);
 
@@ -34,6 +37,9 @@ export component MainWindow inherits Window {
 		calcularot(input1-type, input2-type, output-type, input1-text, input2-text) => { lc_calcularot(input1-type, input2-type, output-type, input1-text, input2-text) }
 		input1-combo-changed(value) => { lc_input1_combo_changed(value) }
 		input2-combo-changed(value) => { lc_input2_combo_changed(value) }
+
+		input1-combo-text: lc-input1-combo-text;
+		input2-combo-text: lc-input2-combo-text;
 
 		input1-model: lc-input1-model;
 		input2-model: lc-input2-model;

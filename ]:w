@@ -49,7 +49,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 			//	models.as_ref()
 			//);
 			
-			ui.set_lc_input2_combo_text("".to_shared_string());
+			ui.set_lc_input2_combo_text("");
 
 			input1_type.replace(new_type);
 		}
@@ -107,7 +107,6 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 			let input2_base = convert_to_base(input2_bigfloat, &input2_group, input2_type);
 
 			let result = calculate_lc(input1_base, input2_base, input1_group, output_group, &mut Consts::new().expect("idk man"));
-			ui.set_lc_result_text(result.to_shared_string());
 		}
 	});
 
