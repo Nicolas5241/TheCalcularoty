@@ -6,12 +6,14 @@ export component LcPage inherits Image {
 	image-fit: fill;
 
 		
-	in property <[string]> input1-model;
-	in property <[string]> input2-model;
-	in property <[string]> input3-model;
+	//in property <[string]> input1-model;
+	//in property <[string]> input2-model;
+	//in property <[string]> input3-model;
 
-	in-out property <string> input1-combo-text <=> input1.combo-value;
-	in-out property <string> input2-combo-text <=> input2.combo-value;
+	in property <[string]> model;
+
+	in-out property <string> input1-combo-text;
+	in-out property <string> input2-combo-text;
 
 	in property <string> output_text;
 
@@ -35,17 +37,22 @@ export component LcPage inherits Image {
 			horizontal-alignment: center;
 		}
 		input1 := ComboInput {
-			combobox-model: input1-model;
+			//combobox-model: input1-model;
+			combobox-model: model;
 			input-type: decimal;
+			combo-value <=> input1-combo-text;
 			combo_changed(value) => { input1-combo-changed(value) }
 		}
 		input2 := ComboInput {
-			combobox-model: input2-model;
+			//combobox-model: input2-model;
+			combobox-model: model;
 			input-type: decimal;
+			combo-value <=> input2-combo-text;
 			combo_changed(value) => { input2-combo-changed(value) }
 		}
 		output := ComboInput {
-			combobox-model: input3-model;
+			//combobox-model: input3-model;
+			combobox-model: model;
 			read-only: true;
 			input-text: output_text;
 		}

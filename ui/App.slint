@@ -5,9 +5,11 @@ import { ImpPage } from "IMP.slint";
 export component MainWindow inherits Window {
 	out property <int> page: 0;
 
-	in property <[string]> lc-input1-model;
-	in property <[string]> lc-input2-model;
-	in property <[string]> lc-input3-model;
+	//in property <[string]> lc-input1-model;
+	//in property <[string]> lc-input2-model;
+	//in property <[string]> lc-input3-model;
+
+	in property <[string]> lc-model;
 
 	in property <string> lc_result_text;
 
@@ -38,12 +40,14 @@ export component MainWindow inherits Window {
 		input1-combo-changed(value) => { lc_input1_combo_changed(value) }
 		input2-combo-changed(value) => { lc_input2_combo_changed(value) }
 
-		input1-combo-text: lc-input1-combo-text;
-		input2-combo-text: lc-input2-combo-text;
+		input1-combo-text <=> lc-input1-combo-text;
+		input2-combo-text <=> lc-input2-combo-text;
 
-		input1-model: lc-input1-model;
-		input2-model: lc-input2-model;
-		input3-model: lc-input3-model;
+		//input1-model: lc-input1-model;
+		//input2-model: lc-input2-model;
+		//input3-model: lc-input3-model;
+
+		model: lc-model;
 
 		output_text: lc_result_text;
 	}

@@ -4,7 +4,7 @@ use crate::utils::{*};
 use std::{cell::RefCell, error::Error, rc::Rc};
 
 use astro_float::Consts;
-use slint::{ModelRc, SharedString, ToSharedString};
+use slint::{SharedString, ToSharedString};
 
 slint::include_modules!();
 
@@ -20,60 +20,30 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 
 	let full_model = vec_to_model([hertz_units_shared.clone(), farad_units_shared.clone(), henry_units_shared.clone()].concat());
 	
-	let hz_f_model = vec_to_model([hertz_units_shared.clone(), farad_units_shared.clone()].concat());
-	let hz_h_model = vec_to_model([hertz_units_shared, henry_units_shared.clone()].concat());
-	let f_h_model = vec_to_model([farad_units_shared, henry_units_shared].concat());
+	//let hz_f_model = vec_to_model([hertz_units_shared.clone(), farad_units_shared.clone()].concat());
+	//let hz_h_model = vec_to_model([hertz_units_shared, henry_units_shared.clone()].concat());
+	//let f_h_model = vec_to_model([farad_units_shared, henry_units_shared].concat());
 
-	let models_rc = Rc::new([f_h_model, hz_h_model, hz_f_model]);
+	//ui.set_lc_input1_model(full_model.clone());
+	//ui.set_lc_input2_model(full_model.clone());
+	//ui.set_lc_input3_model(full_model.clone());
 
-	ui.set_lc_input1_model(full_model.clone());
-	ui.set_lc_input2_model(full_model.clone());
-	ui.set_lc_input3_model(full_model.clone());
+	ui.set_lc_model(full_model);
 
 	ui.on_lc_input1_combo_changed({
 		let ui_handle = ui.as_weak();
 		//let models = models_rc.clone();
 		move |new_value: SharedString| {
 			let ui = ui_handle.unwrap();
-			let new_type = get_unit_group(&new_value);
-
-			if *input1_type.borrow() == new_type {
-				return
-			}
-
-			//set_new_model(
-			//	&new_type,
-			//	|value: ModelRc<SharedString>| {
-			//		ui.set_lc_input2_model(value);
-			//	},
-			//	models.as_ref()
-			//);
-			
-			ui.set_lc_input2_combo_text("".to_shared_string());
-
-			input1_type.replace(new_type);
+			handle_combobox_changed(new_value, input1_type.clone(), |value| ui.set_lc_input2_combo_text(value));
 		}
 	});
 
     ui.on_lc_input2_combo_changed({
         let ui_handle = ui.as_weak();
-		let models = models_rc.clone();
         move |new_value: SharedString| {
             let ui = ui_handle.unwrap();
-			let new_type = get_unit_group(&new_value);
-
-			if *input2_type.borrow() == new_type {
-				return
-			}
-			set_new_model(
-				&new_type,
-				|value: ModelRc<SharedString>| {
-					ui.set_lc_input1_model(value);
-				},
-				models.as_ref()
-			);
-
-			input2_type.replace(new_type);
+			handle_combobox_changed(new_value, input2_type.clone(), |value| ui.set_lc_input1_combo_text(value));
         }
     });
 
@@ -107,11 +77,23 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 			let input2_base = convert_to_base(input2_bigfloat, &input2_group, input2_type);
 
 			let result = calculate_lc(input1_base, input2_base, input1_group, output_group, &mut Consts::new().expect("idk man"));
-			ui.set_lc_result_text(result.to_shared_string());
+			ui.set_lc_result_text(format_bigfloat(result).to_shared_string());
 		}
 	});
 
 	ui.run()?;
 
 	Ok(())
+}
+
+fn handle_combobox_changed(new_value: SharedString, unit_type: Rc<RefCell<UnitType>>, combo_func: impl Fn(SharedString)) {
+	let new_type = get_unit_group(&new_value);
+
+	if *unit_type.borrow() == new_type {
+		return
+	}
+	
+	combo_func("".to_shared_string());
+
+	unit_type.replace(new_type);
 }

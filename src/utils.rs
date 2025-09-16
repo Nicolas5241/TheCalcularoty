@@ -6,10 +6,31 @@ use phf::OrderedMap;
 
 use astro_float::{BigFloat, Consts, RoundingMode};
 
+use regex::Regex;
+
 use slint::{ModelRc, SharedString, ToSharedString, VecModel};
 
 const ROUNDING_MODE: RoundingMode = RoundingMode::ToEven;
 const PRECISION: usize = 2048;
+
+pub fn format_bigfloat(num: BigFloat) -> String {
+	let reg = Regex::new(r"^(.*?)e(.*?)$").unwrap();
+	let res_string = num.to_string();
+	let captures = reg.captures(&res_string).unwrap();
+	let num_str = captures.get(1).unwrap().as_str();
+	let exp_str = captures.get(2).unwrap().as_str();
+	let mut num = num_str.parse::<f64>().unwrap();
+	let mut exp = exp_str.parse::<i32>().unwrap();
+	while num >= 10. {
+		num /= 10.;
+		exp += 1;
+	}
+	num = (num * 1e14).round()/1e14;
+	if (-14..=14).contains(&exp) {
+		return format!("~{}", num * 10f64.powi(exp));
+	}
+	format!("~{num}e{exp}")
+}
 
 #[inline]
 pub fn vec_to_model(vec: Vec<SharedString>) -> ModelRc<SharedString> {
@@ -109,6 +130,7 @@ pub fn set_to_sharedstring_vec(set: &OrderedMap<&str, u64>) -> Vec<SharedString>
 	set.keys().into_iter().map(|x| x.to_shared_string()).collect()
 }
 
+/*
 pub fn set_new_model(new_type: &UnitType, function: impl Fn(ModelRc<SharedString>), models: &[ModelRc<SharedString>]) {
 	match new_type {
 		UnitType::Hertz => function(models[0].to_owned()),
@@ -117,7 +139,9 @@ pub fn set_new_model(new_type: &UnitType, function: impl Fn(ModelRc<SharedString
 		_ => (),
 	}
 }
+*/
 
+/*
 #[inline]
 pub fn get_unit_map(unit_type: &UnitType) -> &OrderedMap<&str, u64> {
     match unit_type {
@@ -127,6 +151,7 @@ pub fn get_unit_map(unit_type: &UnitType) -> &OrderedMap<&str, u64> {
         _ => unimplemented!()
     }
 }
+*/
 
 #[inline]
 pub fn shared_to_bigfloat(str: SharedString) -> BigFloat {
@@ -167,7 +192,7 @@ fn cf0_to_l(c: BigFloat, f0: BigFloat, consts_cache: &mut Consts) -> BigFloat {
 }
 
 //INFO: 1/(l*(2pi*R)²)
-fn lf0_to_c(l: BigFloat, f0: BigFloat, mut consts_cache: &mut Consts) -> BigFloat {
+fn lf0_to_c(l: BigFloat, f0: BigFloat, consts_cache: &mut Consts) -> BigFloat {
 	mul(l,
 		pow(
 			mul(f0,

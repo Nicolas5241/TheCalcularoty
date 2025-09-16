@@ -30,10 +30,9 @@ export component ComboInput inherits HorizontalLayout {
 	in property <InputType> input-type: text;
 	in property <bool> read-only: false;
 
-	in-out property <string> combo-value <=> combo.current-value;
-	in-out property <int> combo-index <=> combo.current-index;
+	in-out property <string> combo-value;
 	
-	in-out property <string> input-text <=> input.text;
+	in-out property <string> input-text;
 
 	callback combo_changed(string);
 
@@ -43,11 +42,12 @@ export component ComboInput inherits HorizontalLayout {
 
 	combo := ComboBox {
 		model: combobox-model;
-		current-value: "";
+		current-value <=> combo-value;
 	}
 
 	input := LineEdit {
 		input-type: input-type;
 		read-only: read-only;
+		text <=> input-text;
 	}
 }

@@ -11,6 +11,7 @@ opt-level = 3
 [dependencies]
 astro-float = "0.9.5"
 phf = { version = "0.13.1", features = ["macros"] }
+regex = "1.11.2"
 rodio = "0.21.1"
 slint = {version = "*", features = ["std", "backend-default", "compat-1-2", "renderer-winit-skia", "backend-android-activity-06"], default-features = false}
 
@@ -30,6 +31,7 @@ resources = "res"
 assets = "assets"
 strip = "strip"
 apk_name = "TheCalcularoty"
+icon = "@mipmap/ic_launcher"
 
 [package.metadata.android.application]
 label = "Calcularoty"

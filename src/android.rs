@@ -4,6 +4,7 @@ use std::{
 };
 use rodio::{Decoder, OutputStreamBuilder, Sink};
 use ndk::asset::AssetManager;
+use std::error::Error;
 
 #[path = "logic.rs"]
 mod logic;
