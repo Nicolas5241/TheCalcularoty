@@ -10,7 +10,10 @@ export component LcPage inherits Image {
 	in property <[string]> input2-model;
 	in property <[string]> input3-model;
 
+	in property <string> output_text;
+
 	callback go_back;
+	callback calcularot(string, string, string, string, string);
 	callback input1-combo-changed(string);
 	callback input2-combo-changed(string);
 
@@ -41,6 +44,7 @@ export component LcPage inherits Image {
 		output := ComboInput {
 			combobox-model: input3-model;
 			read-only: true;
+			input-text: output_text;
 		}
 		VerticalLayout {
 			spacing: 20px;
@@ -49,6 +53,13 @@ export component LcPage inherits Image {
 				Button {
 					text: "Calcularot";
 					width: 150px;
+					clicked => { calcularot(
+						input1.combo-value,
+						input2.combo-value,
+						output.combo-value,
+						input1.input-text,
+						input2.input-text
+					)}
 				}
 			}
 			HorizontalLayout {

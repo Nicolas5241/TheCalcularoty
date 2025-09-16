@@ -1,4 +1,4 @@
-use std::ops::Mul;
+use std::str::FromStr;
 
 use crate::units::{HERTZ_UNITS, FARAD_UNITS, HENRY_UNITS, UnitType};
 
@@ -8,13 +8,54 @@ use astro_float::{BigFloat, Consts, RoundingMode};
 
 use slint::{ModelRc, SharedString, ToSharedString, VecModel};
 
-const ROUNDING_MODE = RoundingMode::ToEven;
-const PRECISION = 2048;
+const ROUNDING_MODE: RoundingMode = RoundingMode::ToEven;
+const PRECISION: usize = 2048;
 
 #[inline]
 pub fn vec_to_model(vec: Vec<SharedString>) -> ModelRc<SharedString> {
 	ModelRc::new(VecModel::from(vec))
 }
+
+pub fn convert_measure(unit: BigFloat, unit_type: UnitType, unit_label: SharedString, target_unit: SharedString) -> BigFloat {
+	match unit_type {
+		UnitType::Hertz => hertz_convert(unit, unit_label, target_unit),
+		UnitType::Farad => farad_convert(unit, unit_label, target_unit),
+		UnitType::Henry => henry_convert(unit, unit_label, target_unit),
+		UnitType::NotSelected => unimplemented!(),
+	}
+}
+
+fn hertz_convert(hertz: BigFloat, unit_label: SharedString, target_unit: SharedString) -> BigFloat {
+	let target_ratio = *HERTZ_UNITS.get(&target_unit).unwrap();
+	let input_ratio = *HERTZ_UNITS.get(&unit_label).unwrap();
+	let ratio = u64::max(target_ratio, input_ratio) / u64::min(target_ratio, input_ratio);
+
+	if target_ratio >= input_ratio {
+		return div(hertz, from_u64(ratio));
+	}
+	mul(hertz, from_u64(ratio))
+}
+
+fn farad_convert(farad: BigFloat, unit_label: SharedString, target_unit: SharedString) -> BigFloat {
+	let target_ratio = *FARAD_UNITS.get(&target_unit).unwrap();
+	let input_ratio = *FARAD_UNITS.get(&unit_label).unwrap();
+	let ratio = u64::max(target_ratio, input_ratio) / u64::min(target_ratio, input_ratio);
+
+	if target_ratio >= input_ratio {
+		return mul(farad, from_u64(ratio));
+	}
+	div(farad, from_u64(ratio))
+}
+
+fn henry_convert(henry: BigFloat, unit_label: SharedString, target_unit: SharedString) -> BigFloat {
+	let target_ratio = *HENRY_UNITS.get(&target_unit).unwrap();
+	let input_ratio = *HENRY_UNITS.get(&unit_label).unwrap();
+	let ratio = u64::max(target_ratio, input_ratio) / u64::min(target_ratio, input_ratio);
+
+	if target_ratio >= input_ratio {
+		return mul(henry, from_u64(ratio));
+	}
+	div(henry, from_u64(ratio))}
 
 pub fn get_unit_group(value: &str) -> UnitType {
 	if HERTZ_UNITS.contains_key(value) {
@@ -49,6 +90,11 @@ pub fn get_unit_map(unit_type: &UnitType) -> &OrderedMap<&str, u64> {
         UnitType::Henry => &HENRY_UNITS,
         _ => unimplemented!()
     }
+}
+
+#[inline]
+pub fn shared_to_bigfloat(str: SharedString) -> BigFloat {
+	BigFloat::from_str(&str).unwrap()
 }
 
 //INFO: 1/(2pi*sqrt(l*c))
@@ -97,6 +143,11 @@ fn lf0_to_c(l: BigFloat, f0: BigFloat, mut consts_cache: Consts) -> BigFloat {
 			2
 		)
 	).reciprocal(PRECISION, ROUNDING_MODE)
+}
+
+#[inline]
+fn from_u64(num: u64) -> BigFloat {
+	BigFloat::from_u64(num, PRECISION)
 }
 
 #[inline]

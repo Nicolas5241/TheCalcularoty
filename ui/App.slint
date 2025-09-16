@@ -9,8 +9,12 @@ export component MainWindow inherits Window {
 	in property <[string]> lc-input2-model;
 	in property <[string]> lc-input3-model;
 
+	in property <string> lc_result_text;
+
 	callback lc_input1_combo_changed(string);
 	callback lc_input2_combo_changed(string);
+
+	callback lc_calcularot(string, string, string, string, string);
 
 	title: "The Calcularoty";
 	
@@ -27,12 +31,15 @@ export component MainWindow inherits Window {
 		visible: page == 1;
 
 		go_back => { page = 0 }
+		calcularot(input1-type, input2-type, output-type, input1-text, input2-text) => { lc_calcularot(input1-type, input2-type, output-type, input1-text, input2-text) }
 		input1-combo-changed(value) => { lc_input1_combo_changed(value) }
 		input2-combo-changed(value) => { lc_input2_combo_changed(value) }
 
 		input1-model: lc-input1-model;
 		input2-model: lc-input2-model;
 		input3-model: lc-input3-model;
+
+		output_text: lc_result_text;
 	}
 	ImpPage {
 		height: parent.height;

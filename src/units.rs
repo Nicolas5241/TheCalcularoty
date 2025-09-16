@@ -1,6 +1,6 @@
 use phf::{phf_ordered_map, OrderedMap};
 
-#[derive(PartialEq, Eq)]
+#[derive(PartialEq, Eq, Debug)]
 pub enum UnitType {
 	Hertz,
 	Farad,

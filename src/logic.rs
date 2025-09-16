@@ -3,7 +3,7 @@ use crate::utils::{*};
 
 use std::{cell::RefCell, error::Error, rc::Rc};
 
-use slint::{ModelRc, SharedString};
+use slint::{ModelRc, SharedString, ToSharedString};
 
 slint::include_modules!();
 
@@ -73,6 +73,30 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 			input2_type.replace(new_type);
         }
     });
+
+	ui.on_lc_calcularot({
+		let ui_handle = ui.as_weak();
+		move |input1_type, input2_type, output_type, input1_text, input2_text| {
+			let ui = ui_handle.unwrap();
+
+			let input1_group = get_unit_group(&input1_type);
+			let input2_group = get_unit_group(&input2_type);
+			let output_group = get_unit_group(&output_type);
+
+			println!("input1 grp {:?}\ninput2 grp {:?}\ninput3 grp {:?}", input1_group, input2_group, output_group);
+
+			if input1_group == UnitType::NotSelected || input2_group == UnitType::NotSelected || output_group == UnitType::NotSelected {
+				return
+			}
+
+			if input1_group == output_group {
+				ui.set_lc_result_text(convert_measure(shared_to_bigfloat(input1_text), input1_group, input1_type, output_type).to_shared_string());
+			} else if input2_group == output_group {
+			    ui.set_lc_result_text(convert_measure(shared_to_bigfloat(input2_text), input2_group, input2_type, output_type).to_shared_string());
+			}
+
+		}
+	});
 
 	ui.run()?;
 
