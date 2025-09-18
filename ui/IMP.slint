@@ -1,4 +1,31 @@
-export component ImpPage inherits Image {
-	source: @image-url("../assets/impedanc.jpg");
-	image-fit: fill; 
+import { Button } from "std-widgets.slint";
+export component ImpPage inherits Rectangle {
+	Image {
+		source: @image-url("../assets/impedanc.jpg");
+		image-fit: fill; 
+		opacity: 0.3;
+		width: root.width;
+		height: root.height;
+	}
+
+	callback go_back;
+
+	VerticalLayout {
+		alignment: space-around;
+
+		Text {
+			text: "Nothin' here dummy!";
+			horizontal-alignment: center;
+			font-size: 30px;
+		}
+		
+		HorizontalLayout {
+			alignment: center;
+			Button {
+				text: "Escape";
+				width: 150px;
+				clicked => { go_back() }
+			}
+		}
+	}
 }

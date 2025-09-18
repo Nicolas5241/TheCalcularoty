@@ -1,8 +1,13 @@
 import { Button } from "std-widgets.slint";
 
-export component MenuPage inherits Image {
-	source: @image-url("../assets/calcularoty.jpg");
-	image-fit: fill;
+export component MenuPage inherits Rectangle {
+	Image {
+		source: @image-url("../assets/calcularoty.jpg");
+		image-fit: fill;
+		opacity: 0.3;
+		width: root.width;
+		height: root.height;
+	}
 
 	callback goto_lc;
 	callback goto_imp;

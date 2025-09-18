@@ -1,10 +1,14 @@
 import { ComboInput } from "components.slint";
 import { Button } from "std-widgets.slint";
 
-export component LcPage inherits Image {
-	source: @image-url("../assets/resonan.jpg");
-	image-fit: fill;
-
+export component LcPage inherits Rectangle {
+	Image{
+		source: @image-url("../assets/resonan.jpg");
+		image-fit: fill;
+		opacity: 0.3;
+		height: root.height;
+		width: root.width;
+	}
 		
 	//in property <[string]> input1-model;
 	//in property <[string]> input2-model;

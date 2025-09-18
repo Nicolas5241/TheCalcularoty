@@ -30,7 +30,7 @@ export component ComboInput inherits HorizontalLayout {
 	in property <InputType> input-type: text;
 	in property <bool> read-only: false;
 	in property <length> input-height: 30px;
-	in property <length> max-combo-width: 80px;
+	in property <length> combo-width: 80px;
 
 	in-out property <string> combo-value;
 	
@@ -46,7 +46,7 @@ export component ComboInput inherits HorizontalLayout {
 		model: combobox-model;
 		current-value <=> combo-value;
 		height: input-height;
-		width: 80px;
+		width: combo-width;
 		vertical-stretch: 0;
 	}
 

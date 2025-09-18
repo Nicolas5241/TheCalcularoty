@@ -37,7 +37,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 		//let models = models_rc.clone();
 		move |new_value: SharedString| {
 			let ui = ui_handle.unwrap();
-			handle_combobox_changed(new_value, type1.clone(), type2.clone(), |value| ui.set_lc_input1_combo_text(value));
+			handle_combobox_changed(new_value, type1.clone(), type2.clone(), |value| ui.set_lc_input2_combo_text(value));
 		}
 	});
 
@@ -47,7 +47,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 		//let type2 = input1_type.clone();
         move |new_value: SharedString| {
             let ui = ui_handle.unwrap();
-			handle_combobox_changed(new_value, input2_type.clone(), input1_type.clone(), |value| ui.set_lc_input2_combo_text(value));
+			handle_combobox_changed(new_value, input2_type.clone(), input1_type.clone(), |value| ui.set_lc_input1_combo_text(value));
         }
     });
 
@@ -92,7 +92,8 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 
 fn handle_combobox_changed(new_value: SharedString, unit_type: Rc<RefCell<UnitType>>, other_type: Rc<RefCell<UnitType>>, combo_func: impl Fn(SharedString)) {
 	let new_type = get_unit_group(&new_value);
-
+	
+	println!("{:?} {:?} {:?}", new_type, *unit_type.borrow(), *other_type.borrow());
 	if *unit_type.borrow() == new_type {
 		return
 	}
