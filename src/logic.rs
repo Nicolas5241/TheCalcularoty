@@ -93,7 +93,6 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 fn handle_combobox_changed(new_value: SharedString, unit_type: Rc<RefCell<UnitType>>, other_type: Rc<RefCell<UnitType>>, combo_func: impl Fn(SharedString)) {
 	let new_type = get_unit_group(&new_value);
 	
-	println!("{:?} {:?} {:?}", new_type, *unit_type.borrow(), *other_type.borrow());
 	if *unit_type.borrow() == new_type {
 		return
 	}
