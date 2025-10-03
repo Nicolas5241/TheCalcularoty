@@ -1,6 +1,9 @@
+use crate::types::*;
+
 use crate::units::{*};
 use crate::utils::{*};
 
+use std::str::FromStr;
 use std::{cell::RefCell, error::Error, rc::Rc};
 
 use astro_float::Consts;
@@ -66,14 +69,22 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 				return
 			}
 
-			let input1_bigfloat = shared_to_bigfloat(input1_text);
-			let input2_bigfloat = shared_to_bigfloat(input2_text);
+			let input1_bigfloat: BFloat = BFloat::from_str(&input1_text).unwrap();
+			let input2_bigfloat: BFloat = BFloat::from_str(&input2_text).unwrap();
 
 			if input1_group == output_group {
-				ui.set_lc_result_text(convert_measure(input1_bigfloat, &input1_group, input1_type, output_type).to_shared_string());
+				ui.set_lc_result_text(
+					format_bfloat(
+						convert_measure(input1_bigfloat, &input1_group, input1_type, output_type)
+					).to_shared_string()
+				);
 				return
 			} else if input2_group == output_group {
-			    ui.set_lc_result_text(convert_measure(input2_bigfloat, &input2_group, input2_type, output_type).to_shared_string());
+			    ui.set_lc_result_text(
+					format_bfloat(
+						convert_measure(input2_bigfloat, &input2_group, input2_type, output_type)
+					).to_shared_string()
+				);
 				return
 			}
 
@@ -81,7 +92,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 			let input2_base = convert_to_base(input2_bigfloat, &input2_group, input2_type);
 
 			let result = calculate_lc(input1_base, input2_base, input1_group, output_group, &mut Consts::new().expect("idk man"));
-			ui.set_lc_result_text(format_bigfloat(result).to_shared_string());
+			ui.set_lc_result_text(format_bfloat(result).to_shared_string());
 		}
 	});
 

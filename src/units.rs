@@ -1,13 +1,5 @@
 use phf::{phf_ordered_map, OrderedMap};
 
-#[derive(PartialEq, Eq, Debug, Clone, Copy)]
-pub enum UnitType {
-	Hertz,
-	Farad,
-	Henry,
-	NotSelected,
-}
-
 pub static HERTZ_UNITS: OrderedMap<&str, u64> = phf_ordered_map! {
 	"Hz" => 1,
     "kHz" => 1000,

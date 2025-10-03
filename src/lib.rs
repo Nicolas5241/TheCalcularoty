@@ -2,6 +2,7 @@
 
 mod android;
 mod utils;
+mod types;
 mod units;
 
 #[unsafe(no_mangle)]

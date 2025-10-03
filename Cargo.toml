@@ -10,6 +10,7 @@ opt-level = 3
 
 [dependencies]
 astro-float = "0.9.5"
+num-traits = "0.2.19"
 phf = { version = "0.13.1", features = ["macros"] }
 regex = "1.11.2"
 rodio = "0.21.1"
