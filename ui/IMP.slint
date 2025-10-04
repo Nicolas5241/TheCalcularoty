@@ -1,4 +1,5 @@
 import { Button } from "std-widgets.slint";
+
 export component ImpPage inherits Rectangle {
 	Image {
 		source: @image-url("../assets/impedanc.jpg");
@@ -14,17 +15,28 @@ export component ImpPage inherits Rectangle {
 		alignment: space-around;
 
 		Text {
-			text: "Nothin' here dummy!";
+			text: "IMP Calcularoty";
 			horizontal-alignment: center;
 			font-size: 30px;
 		}
 		
-		HorizontalLayout {
-			alignment: center;
-			Button {
-				text: "Escape";
-				width: 150px;
-				clicked => { go_back() }
+		VerticalLayout {
+			spacing: 20px;
+			HorizontalLayout {
+				alignment: center;
+				Button {
+					text: "Calcularot";
+					width: 150px;
+					clicked => { }
+				}
+			}
+			HorizontalLayout {
+				alignment: center;
+				Button {
+					text: "Escape";
+					width: 150px;
+					clicked => { go_back() }
+				}
 			}
 		}
 	}
