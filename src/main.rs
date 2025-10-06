@@ -4,6 +4,10 @@ mod not_android;
 mod units;
 mod types;
 mod utils;
+mod calculations;
+mod traits;
+mod consts;
+mod conversions;
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     not_android::run_app()

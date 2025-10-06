@@ -1,4 +1,5 @@
 use std::{fmt::Display, ops::{Add, Div, Mul, Neg, Sub}, str::FromStr};
+use regex::Regex;
 use astro_float::{BigFloat, RoundingMode};
 use num_traits::{One, Pow, Zero};
 
@@ -80,6 +81,27 @@ impl BFloat {
 	}
 }
 
+impl Display for BFloat {
+	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+		let reg = Regex::new(r"^(.*?)e(.*?)$").unwrap();
+		let res_string = self.0.to_string();
+		let captures = reg.captures(&res_string).unwrap();
+		let num_str = captures.get(1).unwrap().as_str();
+		let exp_str = captures.get(2).unwrap().as_str();
+		let mut num = num_str.parse::<f64>().unwrap();
+		let mut exp = exp_str.parse::<i32>().unwrap();
+		while num >= 10. {
+			num /= 10.;
+			exp += 1;
+		}
+		num = (num * 1e14).round()/1e14;
+		if (-14..=14).contains(&exp) {
+			return write!(f, "~{}", num * 10f64.powi(exp));
+		}
+		write!(f, "~{num}e{exp}")
+	}
+}
+
 impl Neg for BFloat {
 	type Output = Self;
 	fn neg(self) -> Self::Output {
@@ -110,12 +132,6 @@ impl One for BFloat {
 	}
 	fn set_one(&mut self) {
 	    *self = Self::one()
-	}
-}
-
-impl Display for BFloat {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-		write!(f, "{}", self.0.to_string())
 	}
 }
 

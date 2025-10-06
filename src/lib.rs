@@ -4,6 +4,10 @@ mod android;
 mod utils;
 mod types;
 mod units;
+mod traits;
+mod calculations;
+mod consts;
+mod conversions;
 
 #[unsafe(no_mangle)]
 fn android_main(app: slint::android::AndroidApp) -> Result<(), Box<dyn std::error::Error>> {

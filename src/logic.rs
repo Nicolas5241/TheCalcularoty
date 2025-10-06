@@ -1,7 +1,10 @@
 use crate::types::*;
+use crate::traits::MapToSharedStringVec;
 
 use crate::units::{*};
 use crate::utils::{*};
+use crate::calculations::*;
+use crate::conversions::*;
 
 use std::str::FromStr;
 use std::{cell::RefCell, error::Error, rc::Rc};
@@ -17,9 +20,9 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	let input1_type = Rc::new(RefCell::new(UnitType::NotSelected));
 	let input2_type = Rc::new(RefCell::new(UnitType::NotSelected));
 
-	let hertz_units_shared: Vec<SharedString> = set_to_sharedstring_vec(&HERTZ_UNITS);
-	let farad_units_shared: Vec<SharedString> = set_to_sharedstring_vec(&FARAD_UNITS);
-	let henry_units_shared: Vec<SharedString> = set_to_sharedstring_vec(&HENRY_UNITS);
+	let hertz_units_shared: Vec<SharedString> = HERTZ_UNITS.to_shared_string_vec();
+	let farad_units_shared: Vec<SharedString> = FARAD_UNITS.to_shared_string_vec();
+	let henry_units_shared: Vec<SharedString> = HENRY_UNITS.to_shared_string_vec();
 
 	let full_model = vec_to_model([hertz_units_shared.clone(), farad_units_shared.clone(), henry_units_shared.clone()].concat());
 	
@@ -74,16 +77,12 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 
 			if input1_group == output_group {
 				ui.set_lc_result_text(
-					format_bfloat(
-						convert_measure(input1_bigfloat, &input1_group, input1_type, output_type)
-					).to_shared_string()
+					convert_measure(input1_bigfloat, &input1_group, input1_type, output_type).to_shared_string()
 				);
 				return
 			} else if input2_group == output_group {
 			    ui.set_lc_result_text(
-					format_bfloat(
-						convert_measure(input2_bigfloat, &input2_group, input2_type, output_type)
-					).to_shared_string()
+						convert_measure(input2_bigfloat, &input2_group, input2_type, output_type).to_shared_string()
 				);
 				return
 			}
@@ -92,7 +91,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 			let input2_base = convert_to_base(input2_bigfloat, &input2_group, input2_type);
 
 			let result = calculate_lc(input1_base, input2_base, input1_group, output_group, &mut Consts::new().expect("idk man"));
-			ui.set_lc_result_text(format_bfloat(result).to_shared_string());
+			ui.set_lc_result_text(result.to_shared_string());
 		}
 	});
 

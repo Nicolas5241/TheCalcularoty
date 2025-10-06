@@ -1,4 +1,6 @@
 use phf::{phf_ordered_map, OrderedMap};
+use slint::{SharedString, ToSharedString};
+use crate::traits::MapToSharedStringVec;
 
 pub static HERTZ_UNITS: OrderedMap<&str, u64> = phf_ordered_map! {
 	"Hz" => 1,
@@ -20,3 +22,12 @@ pub static HENRY_UNITS: OrderedMap<&str, u64> = phf_ordered_map! {
     "nH" => 1000000000,
     "pH" => 1000000000000
 };
+
+impl<T> MapToSharedStringVec for OrderedMap<&str, T> {
+	fn to_shared_string_vec(&self) -> Vec<SharedString> {
+	    self.keys()
+			.into_iter()
+			.map(|x| x.to_shared_string())
+			.collect::<Vec<SharedString>>()
+	}
+}
