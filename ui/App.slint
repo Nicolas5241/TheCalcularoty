@@ -21,6 +21,8 @@ export component MainWindow inherits Window {
 
 	callback lc_calcularot(string, string, string, string, string);
 
+	callback toggled(int);
+
 	title: "The Calcularoty";
 	
 	MenuPage {
@@ -55,6 +57,8 @@ export component MainWindow inherits Window {
 		height: parent.height;
 		width: parent.width;
 		visible: page == 2;
+
+		toggled(i) => { toggled(i) }
 		go_back => { page = 0 }
 	}
 }

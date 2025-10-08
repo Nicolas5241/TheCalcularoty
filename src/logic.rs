@@ -9,13 +9,20 @@ use crate::conversions::*;
 use std::str::FromStr;
 use std::{cell::RefCell, error::Error, rc::Rc};
 
-use astro_float::Consts;
 use slint::{SharedString, ToSharedString};
 
 slint::include_modules!();
 
 pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	let ui = MainWindow::new()?;
+
+	let hz = BFloat::from(1);
+	let omega = hz_to_omega(hz);
+	let l = BFloat(2.into());
+	let c = BFloat(3.into());
+	println!("{}", omega);
+
+	println!("imp series: {}", lc_inductive_impedance(l, omega.clone()).im + lc_capacitive_impedance(c, omega).im);
 
 	let input1_type = Rc::new(RefCell::new(UnitType::NotSelected));
 	let input2_type = Rc::new(RefCell::new(UnitType::NotSelected));
@@ -66,8 +73,6 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 			let input2_group = get_unit_group(&input2_type);
 			let output_group = get_unit_group(&output_type);
 
-			println!("input1 grp {:?}\ninput2 grp {:?}\ninput3 grp {:?}", input1_group, input2_group, output_group);
-
 			if input1_group == UnitType::NotSelected || input2_group == UnitType::NotSelected || output_group == UnitType::NotSelected {
 				return
 			}
@@ -82,7 +87,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 				return
 			} else if input2_group == output_group {
 			    ui.set_lc_result_text(
-						convert_measure(input2_bigfloat, &input2_group, input2_type, output_type).to_shared_string()
+					convert_measure(input2_bigfloat, &input2_group, input2_type, output_type).to_shared_string()
 				);
 				return
 			}
@@ -90,9 +95,13 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 			let input1_base = convert_to_base(input1_bigfloat, &input1_group, input1_type);
 			let input2_base = convert_to_base(input2_bigfloat, &input2_group, input2_type);
 
-			let result = calculate_lc(input1_base, input2_base, input1_group, output_group, &mut Consts::new().expect("idk man"));
+			let result = calculate_lc(input1_base, input2_base, input1_group, output_group);
 			ui.set_lc_result_text(result.to_shared_string());
 		}
+	});
+
+	ui.on_toggled(|selected: i32| {
+		println!("{}", selected);
 	});
 
 	ui.run()?;

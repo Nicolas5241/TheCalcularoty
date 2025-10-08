@@ -1,4 +1,5 @@
 use slint::{SharedString, ToSharedString};
+use crate::consts::TWO_PI;
 use crate::types::*;
 use crate::units::*;
 
@@ -51,4 +52,8 @@ fn henry_convert(henry: BFloat, unit_label: SharedString, target_unit: SharedStr
 		return henry * ratio.into();
 	}
 	henry / ratio.into()
+}
+
+pub fn hz_to_omega(hz: BFloat) -> BFloat {
+	hz * TWO_PI.clone()
 }

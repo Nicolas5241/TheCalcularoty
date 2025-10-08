@@ -1,29 +1,29 @@
 use crate::consts::*;
 use crate::types::{BFloat, UnitType};
-use num_traits::{Pow, One};
-use astro_float::Consts;
+use num_complex::Complex;
+use num_traits::{One, Pow, Zero};
 
-pub fn calculate_lc(base_input1: BFloat, base_input2: BFloat, base1_type: UnitType, output_type: UnitType, consts: &mut Consts) -> BFloat {
+pub fn calculate_lc(base_input1: BFloat, base_input2: BFloat, base1_type: UnitType, output_type: UnitType) -> BFloat {
 	match output_type {
 		UnitType::Hertz => {
 			if base1_type == UnitType::Henry {
-				return lc_to_f0(base_input1, base_input2, consts);
+				return lc_to_f0(base_input1, base_input2);
 			}
-			lc_to_f0(base_input2, base_input1, consts)
+			lc_to_f0(base_input2, base_input1)
 		}
 
 		UnitType::Farad => {
 			if base1_type == UnitType::Henry {
-				return lf0_to_c(base_input1, base_input2, consts);
+				return lf0_to_c(base_input1, base_input2);
 			}
-			lf0_to_c(base_input2, base_input1, consts)
+			lf0_to_c(base_input2, base_input1)
 		}
 
 		UnitType::Henry => {
 			if base1_type == UnitType::Farad {
-				return cf0_to_l(base_input1, base_input2, consts);
+				return cf0_to_l(base_input1, base_input2);
 			}
-			cf0_to_l(base_input1, base_input2, consts)
+			cf0_to_l(base_input1, base_input2)
 		}
 
 		UnitType::NotSelected => unimplemented!()
@@ -31,21 +31,25 @@ pub fn calculate_lc(base_input1: BFloat, base_input2: BFloat, base1_type: UnitTy
 }
 
 //INFO: 1/(2pi*sqrt(l*c))
-pub fn lc_to_f0(l: BFloat, c: BFloat, consts: &mut Consts) -> BFloat {
-	BFloat::one() / ( two_pi(consts) * (l * c).sqrt() )
+fn lc_to_f0(l: BFloat, c: BFloat) -> BFloat {
+	BFloat::one() / ( TWO_PI.clone() * (l * c).sqrt() )
 }
 
 //INFO: 1/(c*(2pi*R)²)
-pub fn cf0_to_l(c: BFloat, f0: BFloat, consts_cache: &mut Consts) -> BFloat {
-	BFloat::one() / ( c * ( two_pi(consts_cache) * f0 ).pow(2u8) )
+fn cf0_to_l(c: BFloat, f0: BFloat) -> BFloat {
+	BFloat::one() / ( c * ( TWO_PI.clone() * f0 ).pow(2u8) )
 }
 
 //INFO: 1/(l*(2pi*R)²)
-pub fn lf0_to_c(l: BFloat, f0: BFloat, consts_cache: &mut Consts) -> BFloat {
-	BFloat::one() / ( l * ( two_pi(consts_cache) * f0 ).pow(2u8) )
+fn lf0_to_c(l: BFloat, f0: BFloat) -> BFloat {
+	BFloat::one() / ( l * ( TWO_PI.clone() * f0 ).pow(2u8) )
 }
 
-#[inline]
-fn two_pi(consts_cache: &mut Consts) -> BFloat {
-	BFloat(consts_cache.pi(PRECISION, ROUNDING_MODE))
+pub fn lc_inductive_impedance(l: BFloat, omega: BFloat) -> Complex<BFloat> {
+
+	Complex::new(BFloat::zero(), omega * l)
+}
+
+pub fn lc_capacitive_impedance(c: BFloat, omega: BFloat) -> Complex<BFloat> {
+	Complex::new(BFloat::zero(), -BFloat::one() / (omega * c))
 }

@@ -14,7 +14,7 @@ pub enum UnitType {
 	NotSelected,
 }
 
-#[derive(Clone, Debug, PartialEq)]
+#[derive(Clone, Debug, PartialEq, PartialOrd)]
 pub struct BFloat(pub BigFloat);
 
 macro_rules! impl_from {

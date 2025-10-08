@@ -58,5 +58,4 @@ use crate::types::BFloat;
 
 		assert_eq!(zero.is_one(), true);
 	}
-	
 }

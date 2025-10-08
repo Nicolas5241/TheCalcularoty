@@ -1,4 +1,5 @@
-import { LineEdit, ComboBox } from "std-widgets.slint";
+import { LineEdit, ComboBox, CheckBox } from "std-widgets.slint";
+
 export component UserInput inherits HorizontalLayout {
 	in property <bool> stroked: false;
 	in property <length> stroke-width: 3px;
@@ -55,5 +56,24 @@ export component ComboInput inherits HorizontalLayout {
 		read-only: read-only;
 		text <=> input-text;
 		height: input-height;
+	}
+}
+
+//TODO: Fix
+export component RadioButtonGroup inherits HorizontalLayout {
+	in property <[string]> labels: [""];
+	in-out property <int> selected;
+	callback toggled(int);
+
+	alignment: space-around;
+	spacing: 20px;
+
+	for label[i] in labels: CheckBox {
+		checked: selected == i;
+		toggled => {
+			selected = i;
+			toggled(selected);
+		}
+		text: label;
 	}
 }
