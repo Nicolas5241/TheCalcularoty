@@ -62,18 +62,18 @@ export component ComboInput inherits HorizontalLayout {
 //TODO: Fix
 export component RadioButtonGroup inherits HorizontalLayout {
 	in property <[string]> labels: [""];
-	in-out property <int> selected;
+	in-out property <int> selected: -1;
 	callback toggled(int);
+
+	function checked(i: int) {
+		selected = i;
+		toggled(i);
+	}
 
 	alignment: space-around;
 	spacing: 20px;
 
-	for label[i] in labels: CheckBox {
-		checked: selected == i;
-		toggled => {
-			selected = i;
-			toggled(selected);
-		}
-		text: label;
+	CheckBox {
+		
 	}
 }
