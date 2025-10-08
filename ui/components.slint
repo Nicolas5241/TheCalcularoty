@@ -60,20 +60,52 @@ export component ComboInput inherits HorizontalLayout {
 }
 
 //TODO: Fix
-export component RadioButtonGroup inherits HorizontalLayout {
+export component TwoRadioButtons inherits HorizontalLayout {
 	in property <[string]> labels: [""];
-	in-out property <int> selected: -1;
-	callback toggled(int);
 
-	function checked(i: int) {
-		selected = i;
-		toggled(i);
+	in property <bool> read-only: false;
+
+	out property <bool> is_radio1: false;
+	out property <bool> is_radio2: true;
+
+
+	public function get_selected() -> int {
+		if is_radio1 {
+			0
+		} if is_radio2 {
+			1
+		}
+		-1
 	}
 
 	alignment: space-around;
-	spacing: 20px;
+	spacing: 20px;	
 
 	CheckBox {
+		text: labels[0];
+		checked <=> is_radio1;
+		enabled: !read_only;
 		
+		toggled => {
+			if !is_radio1 {
+				is_radio1 = true;
+			}
+
+			is_radio2 = false;
+		}
+	}
+
+	CheckBox {
+		text: labels[1];
+		checked <=> is_radio2;
+		enabled: !read_only;
+
+		toggled => {
+			if !is_radio2 {
+				is_radio2 = true;
+			}
+
+			is_radio1 = false;
+		}
 	}
 }

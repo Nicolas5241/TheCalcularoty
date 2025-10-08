@@ -1,5 +1,5 @@
-import { Button } from "std-widgets.slint";
-import { ComboInput, RadioButtonGroup } from "components.slint";
+import { Button, LineEdit } from "std-widgets.slint";
+import { ComboInput, TwoRadioButtons } from "components.slint";
 
 export component ImpPage inherits Rectangle {
 	Image {
@@ -11,11 +11,13 @@ export component ImpPage inherits Rectangle {
 	}
 
 	callback go_back;
-	callback toggled(int);
 
 	in property <[string]> l-model;
 	in property <[string]> c-model;
 	in property <[string]> f-model;
+
+	out property <string> impedance;
+	out property <int> impedane-type;
 
 	VerticalLayout {
 		alignment: space-around;
@@ -38,9 +40,18 @@ export component ImpPage inherits Rectangle {
 			combobox-model: f-model;
 		}
 
-		RadioButtonGroup {
-			labels: ["ya", "no"];
-			toggled(i) => { toggled(i) }
+		TwoRadioButtons {
+			labels: ["Série", "Paralelo"];
+		}
+
+		imp-out := LineEdit {
+			text: impedance;
+			read-only: true;
+		}
+
+		imp-type-out := TwoRadioButtons {
+			labels: ["Inductive", "Capacitive"];
+			read-only: true;
 		}
 		
 		VerticalLayout {

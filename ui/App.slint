@@ -3,6 +3,8 @@ import { MenuPage } from "Menu.slint";
 import { ImpPage } from "IMP.slint";
 
 export component MainWindow inherits Window {
+	default-font-size: 20px;
+
 	out property <int> page: 0;
 
 	//in property <[string]> lc-input1-model;
@@ -58,7 +60,6 @@ export component MainWindow inherits Window {
 		width: parent.width;
 		visible: page == 2;
 
-		toggled(i) => { toggled(i) }
 		go_back => { page = 0 }
 	}
 }
