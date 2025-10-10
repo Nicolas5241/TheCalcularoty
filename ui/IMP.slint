@@ -17,9 +17,14 @@ export component ImpPage inherits Rectangle {
 	in property <[string]> f-model;
 
 	out property <string> impedance;
-	out property <int> impedane-type;
+	property <[string]> impedane-type-model;
 
 	VerticalLayout {
+		padding-top: 10px;
+		padding-bottom: 10px;
+		padding-left: 20px;
+		padding-right: 20px;
+
 		alignment: space-around;
 
 		Text {
@@ -30,28 +35,28 @@ export component ImpPage inherits Rectangle {
 
 		l-input := ComboInput {
 			combobox-model: l-model;
+			combo-value: "mH";
 		}
 
 		c-input := ComboInput {
 			combobox-model: c-model;
+			combo-value: "µF";
 		}
 
 		f-input := ComboInput {
 			combobox-model: f-model;
+			combo-value: "Hz";
 		}
 
 		TwoRadioButtons {
 			labels: ["Série", "Paralelo"];
 		}
 
-		imp-out := LineEdit {
-			text: impedance;
+		imp-out := ComboInput {
+			input-text: impedance;
 			read-only: true;
-		}
-
-		imp-type-out := TwoRadioButtons {
-			labels: ["Inductive", "Capacitive"];
-			read-only: true;
+			combo-read-only: true;
+			combobox-model: impedane-type-model;
 		}
 		
 		VerticalLayout {

@@ -22,7 +22,9 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	let c = BFloat(3.into());
 	println!("{}", omega);
 
-	println!("imp series: {}", lc_inductive_impedance(l, omega.clone()).im + lc_capacitive_impedance(c, omega).im);
+	let (imp, lr, cr) = calculate_impedance(l, c, omega);
+
+	println!("imp series: {}, induct: {}, cap: {}", imp, lr, cr);
 
 	let input1_type = Rc::new(RefCell::new(UnitType::NotSelected));
 	let input2_type = Rc::new(RefCell::new(UnitType::NotSelected));

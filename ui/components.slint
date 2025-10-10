@@ -30,8 +30,9 @@ export component ComboInput inherits HorizontalLayout {
 	in property <[string]> combobox-model: [""];
 	in property <InputType> input-type: text;
 	in property <bool> read-only: false;
+	in property <bool> combo-read-only: false;
 	in property <length> input-height: 30px;
-	in property <length> combo-width: 80px;
+	in property <length> combo-width: 100px;
 
 	in-out property <string> combo-value;
 	
@@ -43,27 +44,27 @@ export component ComboInput inherits HorizontalLayout {
 
 	spacing: 20px;
 
-	combo := ComboBox {
-		model: combobox-model;
-		current-value <=> combo-value;
-		height: input-height;
-		width: combo-width;
-		vertical-stretch: 0;
-	}
-
 	input := LineEdit {
 		input-type: input-type;
 		read-only: read-only;
 		text <=> input-text;
 		height: input-height;
+		horizontal-alignment: right;
+	}
+
+	combo := ComboBox {
+		model: combobox-model;
+		enabled: !combo-read-only;
+		current-value <=> combo-value;
+		height: input-height;
+		width: combo-width;
+		vertical-stretch: 0;
 	}
 }
 
 //TODO: Fix
 export component TwoRadioButtons inherits HorizontalLayout {
 	in property <[string]> labels: [""];
-
-	in property <bool> read-only: false;
 
 	out property <bool> is_radio1: false;
 	out property <bool> is_radio2: true;
@@ -84,7 +85,6 @@ export component TwoRadioButtons inherits HorizontalLayout {
 	CheckBox {
 		text: labels[0];
 		checked <=> is_radio1;
-		enabled: !read_only;
 		
 		toggled => {
 			if !is_radio1 {
@@ -98,7 +98,6 @@ export component TwoRadioButtons inherits HorizontalLayout {
 	CheckBox {
 		text: labels[1];
 		checked <=> is_radio2;
-		enabled: !read_only;
 
 		toggled => {
 			if !is_radio2 {

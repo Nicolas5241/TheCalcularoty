@@ -45,11 +45,20 @@ fn lf0_to_c(l: BFloat, f0: BFloat) -> BFloat {
 	BFloat::one() / ( l * ( TWO_PI.clone() * f0 ).pow(2u8) )
 }
 
-pub fn lc_inductive_impedance(l: BFloat, omega: BFloat) -> Complex<BFloat> {
+pub fn lc_inductive_reactance(l: BFloat, omega: BFloat) -> Complex<BFloat> {
 
 	Complex::new(BFloat::zero(), omega * l)
 }
 
-pub fn lc_capacitive_impedance(c: BFloat, omega: BFloat) -> Complex<BFloat> {
-	Complex::new(BFloat::zero(), -BFloat::one() / (omega * c))
+pub fn lc_capacitive_reactance(c: BFloat, omega: BFloat) -> Complex<BFloat> {
+	Complex::new(BFloat::zero(), BFloat::one() / (omega * c))
+}
+
+pub fn calculate_impedance(l: BFloat, c: BFloat, omega: BFloat) -> (BFloat, BFloat, BFloat) {
+	let l_reactance = lc_inductive_reactance(l, omega.clone()).im;
+	let c_reactance = lc_capacitive_reactance(c, omega).im;
+
+	let lc_impedance = l_reactance.clone() - c_reactance.clone();
+
+	(lc_impedance, l_reactance, c_reactance)
 }
