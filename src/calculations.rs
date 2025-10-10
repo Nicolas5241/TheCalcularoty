@@ -54,7 +54,7 @@ pub fn lc_capacitive_reactance(c: BFloat, omega: BFloat) -> Complex<BFloat> {
 	Complex::new(BFloat::zero(), BFloat::one() / (omega * c))
 }
 
-pub fn calculate_impedance(l: BFloat, c: BFloat, omega: BFloat) -> (BFloat, BFloat, BFloat) {
+pub fn calculate_impedance_series(l: BFloat, c: BFloat, omega: BFloat) -> (BFloat, BFloat, BFloat) {
 	let l_reactance = lc_inductive_reactance(l, omega.clone()).im;
 	let c_reactance = lc_capacitive_reactance(c, omega).im;
 

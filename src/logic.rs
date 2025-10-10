@@ -22,7 +22,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	let c = BFloat(3.into());
 	println!("{}", omega);
 
-	let (imp, lr, cr) = calculate_impedance(l, c, omega);
+	let (imp, lr, cr) = calculate_impedance_series(l, c, omega);
 
 	println!("imp series: {}, induct: {}, cap: {}", imp, lr, cr);
 
