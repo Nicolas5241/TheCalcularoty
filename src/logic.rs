@@ -1,3 +1,4 @@
+use crate::consts::{FARAD_BASE_TYPE, HENRY_BASE_TYPE, HERTZ_BASE_TYPE};
 use crate::types::*;
 use crate::traits::MapToSharedStringVec;
 
@@ -78,18 +79,18 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 
 			if input1_group == output_group {
 				ui.set_lc_result_text(
-					convert_measure(input1_bigfloat, &input1_group, input1_type, output_type).to_shared_string()
+					convert_measure(input1_bigfloat, &input1_group, &input1_type, &output_type).to_shared_string()
 				);
 				return
 			} else if input2_group == output_group {
 			    ui.set_lc_result_text(
-					convert_measure(input2_bigfloat, &input2_group, input2_type, output_type).to_shared_string()
+					convert_measure(input2_bigfloat, &input2_group, &input2_type, &output_type).to_shared_string()
 				);
 				return
 			}
 
-			let input1_base = convert_to_base(input1_bigfloat, &input1_group, input1_type);
-			let input2_base = convert_to_base(input2_bigfloat, &input2_group, input2_type);
+			let input1_base = convert_to_base(input1_bigfloat, &input1_group, &input1_type);
+			let input2_base = convert_to_base(input2_bigfloat, &input2_group, &input2_type);
 
 			let result = calculate_lc(input1_base, input2_base, input1_group, output_group);
 			ui.set_lc_result_text(result.to_shared_string());
@@ -100,61 +101,13 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 		let ui_handle = ui.as_weak();
 		move |l_str, c_str, f_str, l_type, c_type, f_type, type_index| {
 			let ui = ui_handle.unwrap();
-			println!("reached button press handle");
+			let values_option = get_full_value_list(&l_str, &c_str, &f_str, &l_type, &c_type, &f_type, &ui);
 
-			let maybe_expect_message = "astro_float changed their FromStr implementation";
-
-			let l: BFloat;
-			let c: BFloat;
-			let f: BFloat;
-
-			let l_maybe = BFloat::from_str(&l_str).expect(maybe_expect_message);
-			let c_maybe = BFloat::from_str(&c_str).expect(maybe_expect_message);
-			let f_maybe = BFloat::from_str(&f_str).expect(maybe_expect_message);
-
-			let l_nan = l_maybe.0.is_nan();
-			let c_nan = c_maybe.0.is_nan();
-			let f_nan = f_maybe.0.is_nan();
-
-			let nans = l_nan as u8 + c_nan as u8 + f_nan as u8;
-
-
-			if nans > 1 {
-				println!("more than 1 empty");
-				return
+			if values_option.is_none() {
+				return;
 			}
 
-			l = match l_nan {
-				false => l_maybe.clone(),
-				true => {
-					let value = cf0_to_l(c_maybe.clone(), f_maybe.clone());
-					
-					//TODO: set the missing entry for l c and f
-					println!("l {}", value);
-
-					value
-				},
-			};
-			c = match c_nan {
-				false => c_maybe.clone(),
-				true => {
-					let value = lf0_to_c(l_maybe.clone(), f_maybe.clone());
-					
-					println!("c {}", value);
-
-					value
-				},
-			};
-			f = match f_nan {
-				false => f_maybe,
-				true => {
-					let value = lc_to_f0(l_maybe, c_maybe);
-
-					println!("f {}", value);
-
-					value
-				},
-			}
+			let (l, c, f) = values_option.unwrap();
 		}
 	});
 
@@ -175,4 +128,82 @@ fn handle_combobox_changed(new_value: SharedString, unit_type: Rc<RefCell<UnitTy
 	}
 
 	unit_type.replace(new_type);
+}
+
+fn get_full_value_list(l_str: &SharedString, c_str: &SharedString, f_str: &SharedString, l_type: &SharedString, c_type: &SharedString, f_type: &SharedString, ui: &MainWindow) -> Option<(BFloat, BFloat, BFloat)> {
+	let maybe_expect_message = "astro_float changed their FromStr implementation";
+
+	let l: BFloat;
+	let c: BFloat;
+	let f: BFloat;
+
+	let l_maybe = BFloat::from_str(&l_str).expect(maybe_expect_message);
+	let c_maybe = BFloat::from_str(&c_str).expect(maybe_expect_message);
+	let f_maybe = BFloat::from_str(&f_str).expect(maybe_expect_message);
+
+	let l_nan = l_maybe.0.is_nan();
+	let c_nan = c_maybe.0.is_nan();
+	let f_nan = f_maybe.0.is_nan();
+
+	let nans = l_nan as u8 + c_nan as u8 + f_nan as u8;
+
+	if nans > 1 {
+		return None;
+	}
+
+	let l_maybe_base = match l_nan {
+		true => None,
+		false => Some(convert_to_base(l_maybe, &UnitType::Henry, l_type)),
+	};
+
+	let c_maybe_base = match c_nan {
+		true => None,
+		false => Some(convert_to_base(c_maybe, &UnitType::Farad, c_type)),
+	};
+	
+	let f_maybe_base = match f_nan {
+		true => None,
+		false => Some(convert_to_base(f_maybe, &UnitType::Hertz, f_type)),
+	};
+
+	l = match l_maybe_base.clone() {
+		Some(num) => num,
+		None => {
+			let value_base = cf0_to_l(c_maybe_base.clone().unwrap(), f_maybe_base.clone().unwrap());
+
+			let value = convert_measure(value_base, &UnitType::Henry, &HENRY_BASE_TYPE.to_shared_string(), l_type);
+
+			ui.set_inductance(value.as_decimal_string().to_shared_string());
+
+			value
+		},
+	};
+
+	c = match c_maybe_base.clone() {
+		Some(num) => num,
+		None => {
+			let value_base = lf0_to_c(l.clone(), f_maybe_base.clone().unwrap());
+
+			let value = convert_measure(value_base, &UnitType::Farad, &FARAD_BASE_TYPE.to_shared_string(), &c_type);
+
+			ui.set_capacitance(value.as_decimal_string().to_shared_string());
+
+			value
+		},
+	};
+
+	f = match f_maybe_base {
+		Some(num) => num,
+		None => {
+			let value_base = lc_to_f0(l_maybe_base.unwrap(), c_maybe_base.unwrap());
+
+			let value = convert_measure(value_base, &UnitType::Hertz, &HERTZ_BASE_TYPE.to_shared_string(), &f_type);
+
+			ui.set_frequency(value.as_decimal_string().to_shared_string());
+
+			value
+		},
+	};
+
+	Some((l, c, f))
 }

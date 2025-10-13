@@ -49,7 +49,7 @@ export component ComboInput inherits HorizontalLayout {
 		read-only: read-only;
 		text <=> input-text;
 		height: input-height;
-		horizontal-alignment: right;
+		horizontal-alignment: left;
 	}
 
 	combo := ComboBox {
@@ -67,7 +67,7 @@ export component TwoRadioButtons inherits HorizontalLayout {
 	in property <[string]> labels: [""];
 
 	out property <bool> is_radio1: false;
-	out property <bool> is_radio2: true;
+	out property <bool> is_radio2: false;
 
 
 	public function get_selected() -> int {

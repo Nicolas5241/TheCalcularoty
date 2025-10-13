@@ -19,6 +19,10 @@ export component MainWindow inherits Window {
 
 	in property <string> lc_result_text;
 
+	in-out property <string> inductance;
+	in-out property <string> capacitance;
+	in-out property <string> frequency;
+
 	in-out property <string> lc-input1-combo-text;
 	in-out property <string> lc-input2-combo-text;
 
@@ -68,6 +72,10 @@ export component MainWindow inherits Window {
 		l-model: l-model;
 		c-model: c-model;
 		f-model: f-model;
+
+		inductance <=> inductance;
+		capacitance <=> capacitance;
+		frequency <=> frequency;
 
 		go_back => { page = 0 }
 		calcularot(l, c, f, lt, ct, ft, i) => { imp_calcularot(l, c, f, lt, ct, ft, i) }

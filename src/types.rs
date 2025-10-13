@@ -3,6 +3,8 @@ use regex::Regex;
 use astro_float::{BigFloat, RoundingMode};
 use num_traits::{One, Pow, Zero};
 
+use crate::utils;
+
 const PRECISION: usize = 1024;
 const ROUNDING_MODE: RoundingMode = RoundingMode::ToEven;
 
@@ -98,7 +100,8 @@ impl Display for BFloat {
 		if (-14..=14).contains(&exp) {
 			return write!(f, "~{}", num * 10f64.powi(exp));
 		}
-		write!(f, "~{num}e{exp}")
+
+		write!(f, "{num}e{exp}")
 	}
 }
 
@@ -146,3 +149,9 @@ impl_from!(
 	u8, u16, u32, u64, u128,
 	i8, i16, i32, i64, i128
 );
+
+impl BFloat {
+	pub fn as_decimal_string(&self) -> String {
+		utils::bigfloat_to_plain_decimal(self).unwrap()
+	}
+}

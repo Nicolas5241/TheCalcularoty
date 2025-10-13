@@ -17,6 +17,10 @@ export component ImpPage inherits Rectangle {
 	in property <[string]> c-model;
 	in property <[string]> f-model;
 
+	in-out property <string> inductance;
+	in-out property <string> capacitance;
+	in-out property <string> frequency;
+
 	in property <string> impedance;
 	in property <string> inductive-reactance;
 	in property <string> capacitive-reactance;
@@ -42,18 +46,21 @@ export component ImpPage inherits Rectangle {
 			combobox-model: l-model;
 			combo-value: "mH";
 			input-type: decimal;
+			input-text <=> inductance;
 		}
 
 		c-input := ComboInput {
 			combobox-model: c-model;
-			combo-value: "µF";
+			combo-value: "μF";
 			input-type: decimal;
+			input-text <=> capacitance;
 		}
 
 		f-input := ComboInput {
 			combobox-model: f-model;
 			combo-value: "Hz";
 			input-type: decimal;
+			input-text <=> frequency;
 		}
 
 		circuit-type := TwoRadioButtons {
