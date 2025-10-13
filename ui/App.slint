@@ -26,7 +26,7 @@ export component MainWindow inherits Window {
 	callback lc_input2_combo_changed(string);
 
 	callback lc_calcularot(string, string, string, string, string);
-	callback imp_calcularot(string, string, string, int);
+	callback imp_calcularot(string, string, string, string, string, string, int);
 
 	callback toggled(int);
 
@@ -70,6 +70,6 @@ export component MainWindow inherits Window {
 		f-model: f-model;
 
 		go_back => { page = 0 }
-		calcularot(l, c, f, i) => { imp_calcularot(l, c, f, i) }
+		calcularot(l, c, f, lt, ct, ft, i) => { imp_calcularot(l, c, f, lt, ct, ft, i) }
 	}
 }

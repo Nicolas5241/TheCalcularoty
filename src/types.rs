@@ -32,9 +32,9 @@ macro_rules! impl_from {
 impl FromStr for BFloat {
 	type Err = Box<dyn std::error::Error>;
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		Ok(
-			BigFloat::from_str(s)?.into()
-		)
+		let value: BFloat = BigFloat::from_str(s)?.into();
+
+		Ok(value)
 	}
 }
 

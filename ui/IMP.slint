@@ -11,7 +11,7 @@ export component ImpPage inherits Rectangle {
 	}
 
 	callback go_back;
-	callback calcularot(string, string, string, int);
+	callback calcularot(string, string, string, string, string, string, int);
 
 	in property <[string]> l-model;
 	in property <[string]> c-model;
@@ -95,7 +95,7 @@ export component ImpPage inherits Rectangle {
 				Button {
 					text: "Calcularot";
 					width: 150px;
-					clicked => { calcularot(l-input.input-text, c-input.input-text, f-input.input-text, circuit-type.get_selected()) }
+					clicked => { calcularot(l-input.input-text, c-input.input-text, f-input.input-text, l-input.combo-value, c-input.combo-value, f-input.combo-value, circuit-type.get_selected()) }
 				}
 			}
 			HorizontalLayout {

@@ -98,8 +98,63 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 
 	ui.on_imp_calcularot({
 		let ui_handle = ui.as_weak();
-		move |l_str, c_str, f_str, type_index| {
+		move |l_str, c_str, f_str, l_type, c_type, f_type, type_index| {
 			let ui = ui_handle.unwrap();
+			println!("reached button press handle");
+
+			let maybe_expect_message = "astro_float changed their FromStr implementation";
+
+			let l: BFloat;
+			let c: BFloat;
+			let f: BFloat;
+
+			let l_maybe = BFloat::from_str(&l_str).expect(maybe_expect_message);
+			let c_maybe = BFloat::from_str(&c_str).expect(maybe_expect_message);
+			let f_maybe = BFloat::from_str(&f_str).expect(maybe_expect_message);
+
+			let l_nan = l_maybe.0.is_nan();
+			let c_nan = c_maybe.0.is_nan();
+			let f_nan = f_maybe.0.is_nan();
+
+			let nans = l_nan as u8 + c_nan as u8 + f_nan as u8;
+
+
+			if nans > 1 {
+				println!("more than 1 empty");
+				return
+			}
+
+			l = match l_nan {
+				false => l_maybe.clone(),
+				true => {
+					let value = cf0_to_l(c_maybe.clone(), f_maybe.clone());
+					
+					//TODO: set the missing entry for l c and f
+					println!("l {}", value);
+
+					value
+				},
+			};
+			c = match c_nan {
+				false => c_maybe.clone(),
+				true => {
+					let value = lf0_to_c(l_maybe.clone(), f_maybe.clone());
+					
+					println!("c {}", value);
+
+					value
+				},
+			};
+			f = match f_nan {
+				false => f_maybe,
+				true => {
+					let value = lc_to_f0(l_maybe, c_maybe);
+
+					println!("f {}", value);
+
+					value
+				},
+			}
 		}
 	});
 
