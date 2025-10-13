@@ -6,7 +6,10 @@ mod logic;
 
 pub fn run_app() -> Result<(), Box<dyn Error>> {
     std::thread::spawn(||{
-        let _ = play_background_music();
+        let res = play_background_music();
+		if let Err(error) = res {
+			println!("{}", error);
+		}
     });
 
     logic::start_ui()

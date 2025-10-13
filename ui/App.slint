@@ -13,6 +13,10 @@ export component MainWindow inherits Window {
 
 	in property <[string]> lc-model;
 
+	in property <[string]> l-model;
+	in property <[string]> c-model;
+	in property <[string]> f-model;
+
 	in property <string> lc_result_text;
 
 	in-out property <string> lc-input1-combo-text;
@@ -22,6 +26,7 @@ export component MainWindow inherits Window {
 	callback lc_input2_combo_changed(string);
 
 	callback lc_calcularot(string, string, string, string, string);
+	callback imp_calcularot(string, string, string, int);
 
 	callback toggled(int);
 
@@ -60,6 +65,11 @@ export component MainWindow inherits Window {
 		width: parent.width;
 		visible: page == 2;
 
+		l-model: l-model;
+		c-model: c-model;
+		f-model: f-model;
+
 		go_back => { page = 0 }
+		calcularot(l, c, f, i) => { imp_calcularot(l, c, f, i) }
 	}
 }

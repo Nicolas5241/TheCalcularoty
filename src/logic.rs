@@ -16,16 +16,6 @@ slint::include_modules!();
 pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	let ui = MainWindow::new()?;
 
-	let hz = BFloat::from(1);
-	let omega = hz_to_omega(hz);
-	let l = BFloat(2.into());
-	let c = BFloat(3.into());
-	println!("{}", omega);
-
-	let (imp, lr, cr) = calculate_impedance_series(l, c, omega);
-
-	println!("imp series: {}, induct: {}, cap: {}", imp, lr, cr);
-
 	let input1_type = Rc::new(RefCell::new(UnitType::NotSelected));
 	let input2_type = Rc::new(RefCell::new(UnitType::NotSelected));
 
@@ -44,6 +34,10 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	//ui.set_lc_input3_model(full_model.clone());
 
 	ui.set_lc_model(full_model);
+
+	ui.set_l_model(vec_to_model(henry_units_shared));
+	ui.set_c_model(vec_to_model(farad_units_shared));
+	ui.set_f_model(vec_to_model(hertz_units_shared));
 
 	ui.on_lc_input1_combo_changed({
 		let ui_handle = ui.as_weak();
@@ -102,8 +96,11 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 		}
 	});
 
-	ui.on_toggled(|selected: i32| {
-		println!("{}", selected);
+	ui.on_imp_calcularot({
+		let ui_handle = ui.as_weak();
+		move |l_str, c_str, f_str, type_index| {
+			let ui = ui_handle.unwrap();
+		}
 	});
 
 	ui.run()?;
