@@ -16,6 +16,7 @@ export component MainWindow inherits Window {
 	in property <[string]> l-model;
 	in property <[string]> c-model;
 	in property <[string]> f-model;
+	in property <[string]> r-model;
 
 	in property <string> lc_result_text;
 
@@ -72,6 +73,7 @@ export component MainWindow inherits Window {
 		l-model: l-model;
 		c-model: c-model;
 		f-model: f-model;
+		r-model: r-model;
 
 		inductance <=> inductance;
 		capacitance <=> capacitance;

@@ -23,6 +23,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	let hertz_units_shared: Vec<SharedString> = HERTZ_UNITS.to_shared_string_vec();
 	let farad_units_shared: Vec<SharedString> = FARAD_UNITS.to_shared_string_vec();
 	let henry_units_shared: Vec<SharedString> = HENRY_UNITS.to_shared_string_vec();
+	let ohm_units_shared: Vec<SharedString> = OHM_UNITS.to_shared_string_vec();
 
 	let full_model = vec_to_model([hertz_units_shared.clone(), farad_units_shared.clone(), henry_units_shared.clone()].concat());
 	
@@ -39,6 +40,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	ui.set_l_model(vec_to_model(henry_units_shared));
 	ui.set_c_model(vec_to_model(farad_units_shared));
 	ui.set_f_model(vec_to_model(hertz_units_shared));
+	ui.set_r_model(vec_to_model(ohm_units_shared));
 
 	ui.on_lc_input1_combo_changed({
 		let ui_handle = ui.as_weak();

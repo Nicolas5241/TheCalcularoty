@@ -16,6 +16,7 @@ export component ImpPage inherits Rectangle {
 	in property <[string]> l-model;
 	in property <[string]> c-model;
 	in property <[string]> f-model;
+	in property <[string]> r-model;
 
 	in-out property <string> inductance;
 	in-out property <string> capacitance;
@@ -26,8 +27,6 @@ export component ImpPage inherits Rectangle {
 	in property <string> capacitive-reactance;
 	in property <string> resonant-frequency;
 	
-	in property <[string]> impedane-type-model;
-
 	VerticalLayout {
 		padding-top: 10px;
 		padding-bottom: 10px;
@@ -70,29 +69,29 @@ export component ImpPage inherits Rectangle {
 		imp-out := ComboInput {
 			input-text: impedance;
 			read-only: true;
-			combo-read-only: true;
-			combobox-model: impedane-type-model;
+			combobox-model: r-model;
+			combo-value: "Ω";
 		}
 		
 		xl-out := ComboInput {
 			input-text: inductive-reactance;
 			read-only: true;
-			combo-read-only: true;
-			combobox-model: impedane-type-model;
+			combobox-model: r-model;
+			combo-value: "Ω";
 		}
 		
 		xc-out := ComboInput {
 			input-text: capacitive-reactance;
 			read-only: true;
-			combo-read-only: true;
-			combobox-model: impedane-type-model;
+			combobox-model: r-model;
+			combo-value: "Ω";
 		}
 
 		rf-out := ComboInput {
 			input-text: resonant-frequency;
 			read-only: true;
-			combo-read-only: true;
 			combobox-model: f-model;
+			combo-value: "Hz";
 		}
 		
 		VerticalLayout {
