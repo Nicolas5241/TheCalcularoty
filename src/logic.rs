@@ -113,8 +113,6 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 
 			let omega = get_omega(f);
 
-			println!("{}", type_index);
-
 			let (impedance, inductive_reactance, capacitive_reactance) = match type_index {
 				0 => calculate_impedance_series(l.clone(), c.clone(), omega),
 				1 => calculate_impedance_parallel(l.clone(), c.clone(), omega),
