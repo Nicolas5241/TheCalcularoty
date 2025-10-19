@@ -33,6 +33,8 @@ export component ComboInput inherits HorizontalLayout {
 	in property <bool> combo-read-only: false;
 	in property <length> input-height: 30px;
 	in property <length> combo-width: 100px;
+	in property <string> label;
+	in property <length> text-width: -1px;
 
 	in-out property <string> combo-value;
 	
@@ -43,6 +45,17 @@ export component ComboInput inherits HorizontalLayout {
 	changed combo-value => { combo_changed(combo-value) }
 
 	spacing: 20px;
+
+	if label != "" && text-width != -1px: Text {
+		text: label;
+		font-size: 20px;
+		width: text-width;
+	}
+
+	if label != "" && text-width == -1px: Text {
+		text: label;
+		font-size: 20px;
+	}
 
 	input := LineEdit {
 		input-type: input-type;
@@ -69,12 +82,11 @@ export component TwoRadioButtons inherits HorizontalLayout {
 	out property <bool> is_radio1: false;
 	out property <bool> is_radio2: false;
 
-
 	public function get_selected() -> int {
 		if is_radio1 {
-			0
+			return 0;
 		} if is_radio2 {
-			1
+			return 1;
 		}
 		-1
 	}
@@ -87,9 +99,7 @@ export component TwoRadioButtons inherits HorizontalLayout {
 		checked <=> is_radio1;
 		
 		toggled => {
-			if !is_radio1 {
-				is_radio1 = true;
-			}
+			is_radio1 = true;
 
 			is_radio2 = false;
 		}

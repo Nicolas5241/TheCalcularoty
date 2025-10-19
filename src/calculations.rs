@@ -25,8 +25,8 @@ pub fn calculate_lc(base_input1: BFloat, base_input2: BFloat, base1_type: UnitTy
 			}
 			cf0_to_l(base_input1, base_input2)
 		}
-
-		UnitType::NotSelected => unimplemented!()
+	
+		_ => unimplemented!()
 	}
 }
 
@@ -60,7 +60,7 @@ pub fn calculate_impedance_series(l: BFloat, c: BFloat, omega: BFloat) -> (BFloa
 
 	let lc_impedance = l_reactance.clone() + c_reactance.clone();
 
-	(lc_impedance, l_reactance, c_reactance)
+	(lc_impedance.abs(), l_reactance, c_reactance.abs())
 }
 
 pub fn calculate_impedance_parallel(l: BFloat, c: BFloat, omega: BFloat) -> (BFloat, BFloat, BFloat) {
@@ -69,5 +69,10 @@ pub fn calculate_impedance_parallel(l: BFloat, c: BFloat, omega: BFloat) -> (BFl
 
 	let lc_impedance = (l_reactance.clone() * c_reactance.clone()) / (l_reactance.clone() + c_reactance.clone());
 
-	(lc_impedance, l_reactance, c_reactance)
+	(lc_impedance.abs(), l_reactance, c_reactance.abs())
+}
+
+#[inline]
+pub fn calculate_resonant_frequency(l: BFloat, c: BFloat) -> BFloat {
+	BFloat::one() / ( TWO_PI.clone() * ( l * c ).sqrt() )
 }

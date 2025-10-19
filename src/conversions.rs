@@ -1,6 +1,6 @@
 use phf::OrderedMap;
 use slint::{SharedString, ToSharedString};
-use crate::consts::{TWO_PI, HENRY_BASE_TYPE, HERTZ_BASE_TYPE, FARAD_BASE_TYPE};
+use crate::consts::{FARAD_BASE_TYPE, HENRY_BASE_TYPE, HERTZ_BASE_TYPE, OHM_BASE_TYPE, TWO_PI};
 use crate::types::*;
 use crate::units::*;
 
@@ -9,6 +9,7 @@ pub fn convert_measure(unit: BFloat, unit_type: &UnitType, unit_label: &SharedSt
 		UnitType::Hertz => unit_convert(unit, unit_label, target_unit, &HERTZ_UNITS),
 		UnitType::Farad => unit_convert(unit, unit_label, target_unit, &FARAD_UNITS),
 		UnitType::Henry => unit_convert(unit, unit_label, target_unit, &HENRY_UNITS),
+		UnitType::Ohm => unit_convert(unit, unit_label, target_unit, &OHM_UNITS),
 		UnitType::NotSelected => unimplemented!(),
 	}
 }
@@ -18,6 +19,7 @@ pub fn convert_to_base(unit: BFloat, unit_type: &UnitType, unit_label: &SharedSt
 		UnitType::Hertz => unit_convert(unit, unit_label, &HERTZ_BASE_TYPE.to_shared_string(), &HERTZ_UNITS),
 		UnitType::Farad => unit_convert(unit, unit_label, &FARAD_BASE_TYPE.to_shared_string(), &FARAD_UNITS),
 		UnitType::Henry => unit_convert(unit, unit_label, &HENRY_BASE_TYPE.to_shared_string(), &HENRY_UNITS),
+		UnitType::Ohm => unit_convert(unit, unit_label, &OHM_BASE_TYPE.to_shared_string(), &OHM_UNITS),
 		UnitType::NotSelected => unimplemented!(),
 	}
 }
@@ -31,4 +33,9 @@ fn unit_convert(unit: BFloat, unit_label: &SharedString, target_unit: &SharedStr
 		return unit / 10u32.pow(-ratio as u32).into();
 	}
 	unit * 10i32.pow(ratio as u32).into()
+}
+
+#[inline]
+pub fn get_omega(f: BFloat) -> BFloat {
+	f * TWO_PI.clone()
 }

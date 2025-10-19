@@ -11,7 +11,7 @@ export component ImpPage inherits Rectangle {
 	}
 
 	callback go_back;
-	callback calcularot(string, string, string, string, string, string, int);
+	callback calcularot(string, string, string, string, string, string, int, string, string, string, string);
 
 	in property <[string]> l-model;
 	in property <[string]> c-model;
@@ -35,6 +35,9 @@ export component ImpPage inherits Rectangle {
 
 		alignment: space-around;
 
+		property <length> input-text-width: 120px;
+		property <length> output-text-width: 155px;
+
 		Text {
 			text: "IMP Calcularoty";
 			horizontal-alignment: center;
@@ -42,6 +45,8 @@ export component ImpPage inherits Rectangle {
 		}
 
 		l-input := ComboInput {
+			label: "Impedance:";
+			text-width: input-text-width;
 			combobox-model: l-model;
 			combo-value: "mH";
 			input-type: decimal;
@@ -49,6 +54,8 @@ export component ImpPage inherits Rectangle {
 		}
 
 		c-input := ComboInput {
+			label: "Capacitance:";
+			text-width: input-text-width;
 			combobox-model: c-model;
 			combo-value: "μF";
 			input-type: decimal;
@@ -56,6 +63,8 @@ export component ImpPage inherits Rectangle {
 		}
 
 		f-input := ComboInput {
+			label: "Frequency:";
+			text-width: input-text-width;
 			combobox-model: f-model;
 			combo-value: "Hz";
 			input-type: decimal;
@@ -67,6 +76,8 @@ export component ImpPage inherits Rectangle {
 		}
 
 		imp-out := ComboInput {
+			label: "Impedance:";
+			text-width: output-text-width;
 			input-text: impedance;
 			read-only: true;
 			combobox-model: r-model;
@@ -74,6 +85,8 @@ export component ImpPage inherits Rectangle {
 		}
 		
 		xl-out := ComboInput {
+			label: "Inductive Freq.:";
+			text-width: output-text-width;
 			input-text: inductive-reactance;
 			read-only: true;
 			combobox-model: r-model;
@@ -81,6 +94,8 @@ export component ImpPage inherits Rectangle {
 		}
 		
 		xc-out := ComboInput {
+			label: "Capacitive Freq.:";
+			text-width: output-text-width;
 			input-text: capacitive-reactance;
 			read-only: true;
 			combobox-model: r-model;
@@ -88,6 +103,8 @@ export component ImpPage inherits Rectangle {
 		}
 
 		rf-out := ComboInput {
+			label: "Resonant Freq.:";
+			text-width: output-text-width;
 			input-text: resonant-frequency;
 			read-only: true;
 			combobox-model: f-model;
@@ -101,7 +118,7 @@ export component ImpPage inherits Rectangle {
 				Button {
 					text: "Calcularot";
 					width: 150px;
-					clicked => { calcularot(l-input.input-text, c-input.input-text, f-input.input-text, l-input.combo-value, c-input.combo-value, f-input.combo-value, circuit-type.get_selected()) }
+					clicked => { calcularot(l-input.input-text, c-input.input-text, f-input.input-text, l-input.combo-value, c-input.combo-value, f-input.combo-value, circuit-type.get_selected(), imp-out.combo-value, xl-out.combo-value, xc-out.combo-value, rf-out.combo-value) }
 				}
 			}
 			HorizontalLayout {

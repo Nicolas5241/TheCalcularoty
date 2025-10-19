@@ -24,6 +24,11 @@ export component MainWindow inherits Window {
 	in-out property <string> capacitance;
 	in-out property <string> frequency;
 
+	in property <string> impedance;
+	in property <string> inductive-reactance;
+	in property <string> capacitive-reactance;
+	in property <string> resonant-frequency;
+
 	in-out property <string> lc-input1-combo-text;
 	in-out property <string> lc-input2-combo-text;
 
@@ -31,7 +36,7 @@ export component MainWindow inherits Window {
 	callback lc_input2_combo_changed(string);
 
 	callback lc_calcularot(string, string, string, string, string);
-	callback imp_calcularot(string, string, string, string, string, string, int);
+	callback imp_calcularot(string, string, string, string, string, string, int, string, string, string, string);
 
 	callback toggled(int);
 
@@ -79,7 +84,12 @@ export component MainWindow inherits Window {
 		capacitance <=> capacitance;
 		frequency <=> frequency;
 
+		impedance: impedance;
+		inductive-reactance: inductive-reactance;
+		capacitive-reactance: capacitive-reactance;
+		resonant-frequency: resonant-frequency;
+
 		go_back => { page = 0 }
-		calcularot(l, c, f, lt, ct, ft, i) => { imp_calcularot(l, c, f, lt, ct, ft, i) }
+		calcularot(l, c, f, l_t, c_t, f_t, circuit, imp_t, xl_t, xc_t, rf_t) => { imp_calcularot(l, c, f, l_t, c_t, f_t, circuit, imp_t, xl_t, xc_t, rf_t) }
 	}
 }

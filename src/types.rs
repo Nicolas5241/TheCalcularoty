@@ -13,6 +13,7 @@ pub enum UnitType {
 	Hertz,
 	Farad,
 	Henry,
+	Ohm,
 	NotSelected,
 }
 
@@ -78,8 +79,12 @@ impl<T> Pow<T> for BFloat
 }
 
 impl BFloat {
-	pub fn sqrt(self) -> Self {
+	pub fn sqrt(&self) -> Self {
 		self.0.sqrt(PRECISION, ROUNDING_MODE).into()
+	}
+
+	pub fn abs(&self) -> Self {
+		BFloat(self.0.abs())
 	}
 }
 

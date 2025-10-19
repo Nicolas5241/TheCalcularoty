@@ -1,4 +1,4 @@
-use crate::consts::{FARAD_BASE_TYPE, HENRY_BASE_TYPE, HERTZ_BASE_TYPE};
+use crate::consts::{FARAD_BASE_TYPE, HENRY_BASE_TYPE, HERTZ_BASE_TYPE, OHM_BASE_TYPE};
 use crate::types::*;
 use crate::traits::MapToSharedStringVec;
 
@@ -101,7 +101,7 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 
 	ui.on_imp_calcularot({
 		let ui_handle = ui.as_weak();
-		move |l_str, c_str, f_str, l_type, c_type, f_type, type_index| {
+		move |l_str, c_str, f_str, l_type, c_type, f_type, type_index, imp_type, xl_type, xc_type, rf_type| {
 			let ui = ui_handle.unwrap();
 			let values_option = get_full_value_list(&l_str, &c_str, &f_str, &l_type, &c_type, &f_type, &ui);
 
@@ -110,6 +110,28 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 			}
 
 			let (l, c, f) = values_option.unwrap();
+
+			let omega = get_omega(f);
+
+			println!("{}", type_index);
+
+			let (impedance, inductive_reactance, capacitive_reactance) = match type_index {
+				0 => calculate_impedance_series(l.clone(), c.clone(), omega),
+				1 => calculate_impedance_parallel(l.clone(), c.clone(), omega),
+				_ => unreachable!()
+			};
+
+			let resonant_frequency = calculate_resonant_frequency(l, c);
+
+			let impedance_target = convert_measure(impedance, &UnitType::Ohm, &OHM_BASE_TYPE.to_shared_string(), &imp_type);
+			let xl_target = convert_measure(inductive_reactance, &UnitType::Ohm, &OHM_BASE_TYPE.to_shared_string(), &xl_type);
+			let xc_target = convert_measure(capacitive_reactance, &UnitType::Ohm, &OHM_BASE_TYPE.to_shared_string(), &xc_type);
+			let rf_target = convert_measure(resonant_frequency, &UnitType::Hertz, &HERTZ_BASE_TYPE.to_shared_string(), &rf_type);
+
+			ui.set_impedance(impedance_target.as_decimal_string().into());
+			ui.set_inductive_reactance(xl_target.as_decimal_string().into());
+			ui.set_capacitive_reactance(xc_target.as_decimal_string().into());
+			ui.set_resonant_frequency(rf_target.as_decimal_string().into());
 		}
 	});
 

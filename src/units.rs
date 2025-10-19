@@ -23,6 +23,7 @@ pub static HENRY_UNITS: OrderedMap<&str, i32> = phf_ordered_map! {
     "pH" => -12
 };
 pub static OHM_UNITS: OrderedMap<&str, i32> = phf_ordered_map! {
+	"mΩ" => -3,
 	"Ω" => 0,
 	"kΩ" => 3,
 	"MΩ" => 6,
