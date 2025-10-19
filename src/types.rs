@@ -86,6 +86,11 @@ impl BFloat {
 	pub fn abs(&self) -> Self {
 		BFloat(self.0.abs())
 	}
+
+	#[inline]
+	pub fn nan() -> Self {
+		BFloat(BigFloat::nan(None))
+	}
 }
 
 impl Display for BFloat {

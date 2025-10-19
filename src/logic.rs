@@ -103,6 +103,11 @@ pub fn start_ui() -> Result<(), Box<dyn Error>> {
 		let ui_handle = ui.as_weak();
 		move |l_str, c_str, f_str, l_type, c_type, f_type, type_index, imp_type, xl_type, xc_type, rf_type| {
 			let ui = ui_handle.unwrap();
+
+			if type_index == -1 {
+				return;
+			}
+			
 			let values_option = get_full_value_list(&l_str, &c_str, &f_str, &l_type, &c_type, &f_type, &ui);
 
 			if values_option.is_none() {
@@ -153,15 +158,13 @@ fn handle_combobox_changed(new_value: SharedString, unit_type: Rc<RefCell<UnitTy
 }
 
 fn get_full_value_list(l_str: &SharedString, c_str: &SharedString, f_str: &SharedString, l_type: &SharedString, c_type: &SharedString, f_type: &SharedString, ui: &MainWindow) -> Option<(BFloat, BFloat, BFloat)> {
-	let maybe_expect_message = "astro_float changed their FromStr implementation";
-
 	let l: BFloat;
 	let c: BFloat;
 	let f: BFloat;
 
-	let l_maybe = BFloat::from_str(&l_str).expect(maybe_expect_message);
-	let c_maybe = BFloat::from_str(&c_str).expect(maybe_expect_message);
-	let f_maybe = BFloat::from_str(&f_str).expect(maybe_expect_message);
+	let l_maybe = BFloat::from_str(&l_str).unwrap_or(BFloat::nan());
+	let c_maybe = BFloat::from_str(&c_str).unwrap_or(BFloat::nan());
+	let f_maybe = BFloat::from_str(&f_str).unwrap_or(BFloat::nan());
 
 	let l_nan = l_maybe.0.is_nan();
 	let c_nan = c_maybe.0.is_nan();

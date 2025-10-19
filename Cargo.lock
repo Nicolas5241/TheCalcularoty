@@ -4416,7 +4416,7 @@ checksum = "f18aa187839b2bdb1ad2fa35ead8c4c2976b64e4363c386d45ac0f7ee85c9233"
 
 [[package]]
 name = "the_calcularoty"
-version = "0.5.0"
+version = "1.0.0"
 dependencies = [
  "astro-float",
  "ndk 0.9.0",
