@@ -1,5 +1,7 @@
 #![cfg(not(target_os = "android"))]
 
+#![windows_subsystem = "windows"]
+
 mod not_android;
 mod units;
 mod types;
