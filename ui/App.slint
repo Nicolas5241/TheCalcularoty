@@ -1,24 +1,17 @@
-import { LcPage } from "LC.slint";
-import { MenuPage } from "Menu.slint";
 import { ImpPage } from "IMP.slint";
 
 export component MainWindow inherits Window {
 	default-font-size: 20px;
 
-	out property <int> page: 0;
-
 	//in property <[string]> lc-input1-model;
 	//in property <[string]> lc-input2-model;
 	//in property <[string]> lc-input3-model;
 
-	in property <[string]> lc-model;
 
 	in property <[string]> l-model;
 	in property <[string]> c-model;
 	in property <[string]> f-model;
 	in property <[string]> r-model;
-
-	in property <string> lc_result_text;
 
 	in-out property <string> inductance;
 	in-out property <string> capacitance;
@@ -29,51 +22,13 @@ export component MainWindow inherits Window {
 	in property <string> capacitive-reactance;
 	in property <string> resonant-frequency;
 
-	in-out property <string> lc-input1-combo-text;
-	in-out property <string> lc-input2-combo-text;
-
-	callback lc_input1_combo_changed(string);
-	callback lc_input2_combo_changed(string);
-
-	callback lc_calcularot(string, string, string, string, string);
 	callback imp_calcularot(string, string, string, string, string, string, int, string, string, string, string);
-
-	callback toggled(int);
 
 	title: "The Calcularoty";
 	
-	MenuPage {
-		height: parent.height;
-		width: parent.width;
-		visible: page == 0;
-		goto_lc => { page = 1 }
-		goto_imp => { page = 2 }
-	}
-	lc := LcPage {
-		height: parent.height;
-		width: parent.width;
-		visible: page == 1;
-
-		go_back => { page = 0 }
-		calcularot(input1-type, input2-type, output-type, input1-text, input2-text) => { lc_calcularot(input1-type, input2-type, output-type, input1-text, input2-text) }
-		input1-combo-changed(value) => { lc_input1_combo_changed(value) }
-		input2-combo-changed(value) => { lc_input2_combo_changed(value) }
-
-		input1-combo-text <=> lc-input1-combo-text;
-		input2-combo-text <=> lc-input2-combo-text;
-
-		//input1-model: lc-input1-model;
-		//input2-model: lc-input2-model;
-		//input3-model: lc-input3-model;
-
-		model: lc-model;
-
-		output_text: lc_result_text;
-	}
 	ImpPage {
 		height: parent.height;
 		width: parent.width;
-		visible: page == 2;
 
 		l-model: l-model;
 		c-model: c-model;
@@ -89,7 +44,6 @@ export component MainWindow inherits Window {
 		capacitive-reactance: capacitive-reactance;
 		resonant-frequency: resonant-frequency;
 
-		go_back => { page = 0 }
 		calcularot(l, c, f, l_t, c_t, f_t, circuit, imp_t, xl_t, xc_t, rf_t) => { imp_calcularot(l, c, f, l_t, c_t, f_t, circuit, imp_t, xl_t, xc_t, rf_t) }
 	}
 }

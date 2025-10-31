@@ -110,24 +110,13 @@ export component ImpPage inherits Rectangle {
 			combobox-model: f-model;
 			combo-value: "Hz";
 		}
-		
-		VerticalLayout {
-			spacing: 20px;
-			HorizontalLayout {
-				alignment: center;
-				Button {
-					text: "Calcularot";
-					width: 150px;
-					clicked => { calcularot(l-input.input-text, c-input.input-text, f-input.input-text, l-input.combo-value, c-input.combo-value, f-input.combo-value, circuit-type.get_selected(), imp-out.combo-value, xl-out.combo-value, xc-out.combo-value, rf-out.combo-value) }
-				}
-			}
-			HorizontalLayout {
-				alignment: center;
-				Button {
-					text: "Escape";
-					width: 150px;
-					clicked => { go_back() }
-				}
+
+		HorizontalLayout {
+			alignment: center;
+			Button {
+				text: "Calcularot";
+				width: 150px;
+				clicked => { calcularot(l-input.input-text, c-input.input-text, f-input.input-text, l-input.combo-value, c-input.combo-value, f-input.combo-value, circuit-type.get_selected(), imp-out.combo-value, xl-out.combo-value, xc-out.combo-value, rf-out.combo-value) }
 			}
 		}
 	}

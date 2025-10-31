@@ -1,6 +1,7 @@
 #![cfg(target_os = "android")]
 
-mod android;
+mod logic;
+//mod android;
 mod utils;
 mod types;
 mod units;
@@ -13,5 +14,6 @@ mod conversions;
 fn android_main(app: slint::android::AndroidApp) -> Result<(), Box<dyn std::error::Error>> {
     slint::android::init(app.clone())?;
 
-    android::run_app(app.asset_manager())
+    //android::run_app(app.asset_manager())
+	logic::start_ui()
 }
