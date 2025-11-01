@@ -6,3 +6,11 @@ rustflags = [
 	"-Lnative=/xwin/sdk/lib/um/x86_64",
 	"-Lnative=/xwin/sdk/lib/ucrt/x86_64",
 ]
+
+[unstable]
+build-std = ["core", "alloc", "std"]
+build-std-features = ["default"]
+panic-immediate-abort = true
+
+[profile.release]
+panic = "immediate-abort"
