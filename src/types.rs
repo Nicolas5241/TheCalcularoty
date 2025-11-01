@@ -14,7 +14,6 @@ pub enum UnitType {
 	Farad,
 	Henry,
 	Ohm,
-	NotSelected,
 }
 
 #[derive(Clone, Debug, PartialEq, PartialOrd)]

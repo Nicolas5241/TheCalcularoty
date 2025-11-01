@@ -1,8 +1,8 @@
 use phf::OrderedMap;
-use slint::{SharedString, ToSharedString};
-use crate::consts::{FARAD_BASE_TYPE, HENRY_BASE_TYPE, HERTZ_BASE_TYPE, OHM_BASE_TYPE, TWO_PI};
-use crate::types::*;
-use crate::units::*;
+use slint::SharedString;
+use crate::consts::TWO_PI;
+use crate::types::{BFloat, UnitType};
+use crate::units::{HERTZ_UNITS, FARAD_UNITS, HENRY_UNITS, OHM_UNITS};
 
 pub fn convert_measure(unit: BFloat, unit_type: &UnitType, unit_label: &SharedString, target_unit: &SharedString) -> BFloat {
 	match unit_type {
@@ -10,17 +10,6 @@ pub fn convert_measure(unit: BFloat, unit_type: &UnitType, unit_label: &SharedSt
 		UnitType::Farad => unit_convert(unit, unit_label, target_unit, &FARAD_UNITS),
 		UnitType::Henry => unit_convert(unit, unit_label, target_unit, &HENRY_UNITS),
 		UnitType::Ohm => unit_convert(unit, unit_label, target_unit, &OHM_UNITS),
-		UnitType::NotSelected => unimplemented!(),
-	}
-}
-
-pub fn convert_to_base(unit: BFloat, unit_type: &UnitType, unit_label: &SharedString) -> BFloat {
-	match unit_type {
-		UnitType::Hertz => unit_convert(unit, unit_label, &HERTZ_BASE_TYPE.to_shared_string(), &HERTZ_UNITS),
-		UnitType::Farad => unit_convert(unit, unit_label, &FARAD_BASE_TYPE.to_shared_string(), &FARAD_UNITS),
-		UnitType::Henry => unit_convert(unit, unit_label, &HENRY_BASE_TYPE.to_shared_string(), &HENRY_UNITS),
-		UnitType::Ohm => unit_convert(unit, unit_label, &OHM_BASE_TYPE.to_shared_string(), &OHM_UNITS),
-		UnitType::NotSelected => unimplemented!(),
 	}
 }
 

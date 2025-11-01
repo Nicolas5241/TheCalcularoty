@@ -8,7 +8,7 @@ use crate::calculations::*;
 use crate::conversions::*;
 
 use std::str::FromStr;
-use std::{cell::RefCell, error::Error, rc::Rc};
+use std::error::Error;
 
 use slint::{SharedString, ToSharedString};
 
@@ -16,9 +16,6 @@ slint::include_modules!();
 
 pub fn start_ui() -> Result<(), Box<dyn Error>> {
 	let ui = MainWindow::new()?;
-
-	let input1_type = Rc::new(RefCell::new(UnitType::NotSelected));
-	let input2_type = Rc::new(RefCell::new(UnitType::NotSelected));
 
 	let hertz_units_shared: Vec<SharedString> = HERTZ_UNITS.to_shared_string_vec();
 	let farad_units_shared: Vec<SharedString> = FARAD_UNITS.to_shared_string_vec();
@@ -101,19 +98,23 @@ fn get_full_value_list(l_str: &SharedString, c_str: &SharedString, f_str: &Share
 		return None;
 	}
 
+	let henry_base = HENRY_BASE_TYPE.to_shared_string();
+	let farad_base = FARAD_BASE_TYPE.to_shared_string();
+	let hertz_base = HERTZ_BASE_TYPE.to_shared_string();
+
 	let l_maybe_base = match l_nan {
 		true => None,
-		false => Some(convert_to_base(l_maybe, &UnitType::Henry, l_type)),
+		false => Some(convert_measure(l_maybe, &UnitType::Henry, l_type, &henry_base)),
 	};
 
 	let c_maybe_base = match c_nan {
 		true => None,
-		false => Some(convert_to_base(c_maybe, &UnitType::Farad, c_type)),
+		false => Some(convert_measure(c_maybe, &UnitType::Farad, c_type, &farad_base)),
 	};
 	
 	let f_maybe_base = match f_nan {
 		true => None,
-		false => Some(convert_to_base(f_maybe, &UnitType::Hertz, f_type)),
+		false => Some(convert_measure(f_maybe, &UnitType::Hertz, f_type, &hertz_base)),
 	};
 
 	l = match l_maybe_base.clone() {
@@ -121,7 +122,7 @@ fn get_full_value_list(l_str: &SharedString, c_str: &SharedString, f_str: &Share
 		None => {
 			let value_base = cf0_to_l(c_maybe_base.clone().unwrap(), f_maybe_base.clone().unwrap());
 
-			let value = convert_measure(value_base, &UnitType::Henry, &HENRY_BASE_TYPE.to_shared_string(), l_type);
+			let value = convert_measure(value_base, &UnitType::Henry, &henry_base, l_type);
 
 			ui.set_inductance(value.as_decimal_string().to_shared_string());
 
@@ -134,7 +135,7 @@ fn get_full_value_list(l_str: &SharedString, c_str: &SharedString, f_str: &Share
 		None => {
 			let value_base = lf0_to_c(l.clone(), f_maybe_base.clone().unwrap());
 
-			let value = convert_measure(value_base, &UnitType::Farad, &FARAD_BASE_TYPE.to_shared_string(), &c_type);
+			let value = convert_measure(value_base, &UnitType::Farad, &farad_base, &c_type);
 
 			ui.set_capacitance(value.as_decimal_string().to_shared_string());
 
@@ -147,7 +148,7 @@ fn get_full_value_list(l_str: &SharedString, c_str: &SharedString, f_str: &Share
 		None => {
 			let value_base = lc_to_f0(l_maybe_base.unwrap(), c_maybe_base.unwrap());
 
-			let value = convert_measure(value_base, &UnitType::Hertz, &HERTZ_BASE_TYPE.to_shared_string(), &f_type);
+			let value = convert_measure(value_base, &UnitType::Hertz, &hertz_base, &f_type);
 
 			ui.set_frequency(value.as_decimal_string().to_shared_string());
 
