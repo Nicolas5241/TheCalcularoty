@@ -10,7 +10,7 @@ rustflags = [
 [unstable]
 build-std = ["core", "alloc", "std"]
 build-std-features = ["default"]
-panic-immediate-abort = true
+#panic-immediate-abort = true
 
 [profile.release]
 panic = "immediate-abort"
