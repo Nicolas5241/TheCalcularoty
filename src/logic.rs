@@ -1,4 +1,7 @@
 use crate::consts::{FARAD_BASE_TYPE, HENRY_BASE_TYPE, HERTZ_BASE_TYPE, OHM_BASE_TYPE};
+use alloc::boxed::Box;
+use alloc::vec::Vec;
+
 use crate::types::*;
 use crate::traits::MapToSharedStringVec;
 
@@ -7,8 +10,8 @@ use crate::utils::{*};
 use crate::calculations::*;
 use crate::conversions::*;
 
-use std::str::FromStr;
-use std::error::Error;
+use core::str::FromStr;
+use core::error::Error;
 
 use slint::{SharedString, ToSharedString};
 

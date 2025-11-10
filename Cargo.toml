@@ -19,13 +19,14 @@ split-debuginfo = "packed"
 lto = false
 
 [dependencies]
-astro-float = "0.9.5"
-num-complex = "0.4.6"
-num-traits = "0.2.19"
-phf = { version = "0.13.1", features = ["macros"] }
-regex = "1.11.2"
-rodio = {version = "0.21.1", default-features = false, features = ["playback", "mp3"]}
-slint = {version = "*", features = ["std", "backend-default", "compat-1-2", "renderer-software"], default-features = false}
+astro-float = { version = "0.9.5", default-features = false }
+dlmalloc = { version = "0.2.11", features = ["global"] }
+num-complex = { version = "0.4.6", default-features = false }
+num-traits = { version = "0.2.19", default-features = false }
+phf = { version = "0.13.1", features = ["macros"], default-features = false}
+regex = { version = "1.11.2", default-features = false }
+slint = {version = "*", features = ["backend-default", "compat-1-2", "renderer-software", "backend-android-activity-06"], default-features = false}
+spin = "0.10.0"
 
 #[target.'cfg(target_os = "android")'.dependencies]
 #ndk = "0.9.0"

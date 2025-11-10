@@ -1,9 +1,13 @@
-use std::{fmt::Display, ops::{Add, Div, Mul, Neg, Sub}, str::FromStr};
+use core::{fmt, error::Error, ops::{Add, Div, Mul, Neg, Sub}, str::FromStr};
+
+use alloc::boxed::Box;
+use alloc::string::String;
+
 use regex::Regex;
-use astro_float::{BigFloat, RoundingMode};
+use astro_float::{BigFloat, Radix, RoundingMode, Sign};
 use num_traits::{One, Pow, Zero};
 
-use crate::utils;
+use crate::{consts::CONSTS_CACHE, utils};
 
 const PRECISION: usize = 1024;
 const ROUNDING_MODE: RoundingMode = RoundingMode::ToEven;
@@ -32,10 +36,9 @@ macro_rules! impl_from {
 }
 
 impl FromStr for BFloat {
-	type Err = Box<dyn std::error::Error>;
+	type Err = Box<dyn Error>;
 	fn from_str(s: &str) -> Result<Self, Self::Err> {
-		let value: BFloat = BigFloat::from_str(s)?.into();
-
+		let value: BFloat = BigFloat::parse(s, astro_float::Radix::Dec, PRECISION, ROUNDING_MODE, &mut CONSTS_CACHE.lock()).into();
 		Ok(value)
 	}
 }
@@ -92,10 +95,10 @@ impl BFloat {
 	}
 }
 
-impl Display for BFloat {
-	fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+impl fmt::Display for BFloat {
+	fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
 		let reg = Regex::new(r"^(.*?)e(.*?)$").unwrap();
-		let res_string = self.0.to_string();
+		let res_string = bigfloat_to_string(&self.0, Radix::Dec);
 		let captures = reg.captures(&res_string).unwrap();
 		let num_str = captures.get(1).unwrap().as_str();
 		let exp_str = captures.get(2).unwrap().as_str();
@@ -163,4 +166,35 @@ impl BFloat {
 	pub fn as_decimal_string(&self) -> String {
 		utils::bigfloat_to_plain_decimal(self).unwrap()
 	}
+}
+
+
+fn bigfloat_to_string(x: &BigFloat, radix: Radix) -> String {
+    let (sign, digits, exp) = x.convert_to_radix(radix, ROUNDING_MODE, &mut CONSTS_CACHE.lock()).unwrap();
+
+    let mut s = String::new();
+
+    // Add sign if needed
+    if let Sign::Neg = sign {
+        s.push('-');
+    }
+
+    // Convert digits (u8s) to characters
+    for (i, &d) in digits.iter().enumerate() {
+        if i as i32 == exp {
+            // Place decimal point if exponent says so
+            s.push('.');
+        }
+        s.push(char::from(b'0' + d));
+    }
+
+    // Handle case where exponent is beyond digits
+    if exp as usize >= digits.len() {
+        for _ in digits.len()..(exp as usize) {
+            s.push('0');
+        }
+        s.push_str(".0");
+    }
+
+    s
 }

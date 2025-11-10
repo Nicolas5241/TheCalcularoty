@@ -1,4 +1,5 @@
 use crate::types::BFloat;
+use alloc::{ string::{ String, ToString }, vec::Vec };
 
 use astro_float::{Consts, Radix, RoundingMode, Sign};
 use slint::{ModelRc, SharedString, VecModel};

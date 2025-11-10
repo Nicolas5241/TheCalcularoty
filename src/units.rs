@@ -1,4 +1,5 @@
 use phf::{phf_ordered_map, OrderedMap};
+use alloc::vec::Vec;
 use slint::{SharedString, ToSharedString};
 use crate::traits::MapToSharedStringVec;
 
