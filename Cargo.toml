@@ -22,6 +22,11 @@ regex = "1.11.2"
 rodio = "0.21.1"
 slint = {version = "*", features = ["std", "backend-default", "compat-1-2", "renderer-software", "backend-android-activity-06"], default-features = false}
 
+[target.'cfg(target_arch = "wasm32")'.dependencies]
+console_error_panic_hook = "0.1"
+wasm-bindgen = { version = "0.2"}
+getrandom = { version = "0.2.2", features = ["js"] }
+
 [target.'cfg(target_os = "android")'.dependencies]
 ndk = "0.9.0"
 
@@ -30,6 +35,9 @@ slint-build = "*"
 
 [lib]
 crate-type = ["cdylib"]
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = ["-O4", "--enable-bulk-memory", "--enable-nontrapping-float-to-int"]
 
 [package.metadata.android]
 build_targets = [ "aarch64-linux-android"]
