@@ -3,6 +3,7 @@ name = "the_calcularoty"
 version = "1.0.0"
 edition = "2024"
 build = "build.rs"
+authors = ["Nicolas Kist Steffen"]
 
 [profile.release]
 strip = true
@@ -51,3 +52,8 @@ max_sdk_version = 36
 [package.metadata.android.signing.release]
 path = "../../Android/Keystores/release.keystore"
 keystore_password = "52345241"
+
+[package.metadata.appimage]
+assets = ["assets"]
+icon = "assets/calcularoty.jpg"
+desktop_entry = "MilhasCorp/the_calcularoty.desktop"
