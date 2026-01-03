@@ -23,7 +23,7 @@ pub fn calculate_lc(base_input1: BFloat, base_input2: BFloat, base1_type: UnitTy
 			if base1_type == UnitType::Farad {
 				return cf0_to_l(base_input1, base_input2);
 			}
-			cf0_to_l(base_input1, base_input2)
+			cf0_to_l(base_input2, base_input1)
 		}
 	
 		_ => unimplemented!()
