@@ -162,6 +162,6 @@ impl_from!(
 
 impl BFloat {
 	pub fn as_decimal_string(&self) -> String {
-		utils::bigfloat_to_plain_decimal(self).unwrap()
+		utils::bigfloat_to_plain_decimal(self).unwrap_or("0".to_string())
 	}
 }
