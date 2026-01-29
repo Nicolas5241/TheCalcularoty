@@ -51,7 +51,7 @@ target_sdk_version = 36
 max_sdk_version = 36
 
 [package.metadata.android.signing.release]
-path = "../../Android/Keystores/release.keystore"
+path = "../../../Android/Keystores/release.keystore"
 keystore_password = "52345241"
 
 [package.metadata.appimage]
